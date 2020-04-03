@@ -2,7 +2,7 @@
 
 const TASK_COUNT = 3;
 
-const createTripAndCostTemplate = () => {
+const createTripTemplate = () => {
   return (
     `<section class="trip-main__trip-info  trip-info">
     <div class="trip-info__main">
@@ -11,10 +11,15 @@ const createTripAndCostTemplate = () => {
       <p class="trip-info__dates">Mar 18&nbsp;&mdash;&nbsp;20</p>
     </div>
 
-    <p class="trip-info__cost">
-      Total: &euro;&nbsp;<span class="trip-info__cost-value">1230</span>
-    </p>
   </section>`
+  );
+};
+
+const createCostTemplate = () => {
+  return (
+    `<p class="trip-info__cost">
+    Total: &euro;&nbsp;<span class="trip-info__cost-value">1230</span>
+  </p>`
   );
 };
 
@@ -51,7 +56,7 @@ const createFiltersTemplate = () => {
   );
 };
 
-const createSortTemplate = () => {
+const createTripEventEditTemplate = () => {
   return (
     `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
     <span class="trip-sort__item  trip-sort__item--day">Day</span>
@@ -265,7 +270,7 @@ const createTripEventsTemplate = () => {
   );
 };
 
-const createTripDaysTemplate = () => {
+const createTripDayTemplate = () => {
   return (
     `<ul class="trip-days">
     <li class="trip-days__item  day">
@@ -319,7 +324,7 @@ const createTripItemTemplate = () => {
   );
 };
 
-const render = (container, template, place = `beforeend`) => {
+const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
 
@@ -329,15 +334,19 @@ const siteTripMainElement = siteHeaderElement.querySelector(`.trip-main`);
 const siteTripControlsElement = siteHeaderElement.querySelector(`.trip-controls`);
 const siteTripEventsElement = siteMainElement.querySelector(`.trip-events`);
 
-render(siteTripMainElement, createTripAndCostTemplate());
-render(siteTripControlsElement, createMenuTemplate());
-render(siteTripControlsElement, createFiltersTemplate());
-render(siteTripEventsElement, createSortTemplate());
-render(siteTripEventsElement, createTripEventsTemplate());
-render(siteTripEventsElement, createTripDaysTemplate());
+render(siteTripMainElement, createTripTemplate(), `afterbegin`);
+
+const siteTripInfoElement = siteTripMainElement.querySelector(`.trip-info`);
+
+render(siteTripInfoElement, createCostTemplate(), `beforeend`);
+render(siteTripControlsElement, createMenuTemplate(), `afterbegin`);
+render(siteTripControlsElement, createFiltersTemplate(), `beforeend`);
+render(siteTripEventsElement, createTripEventEditTemplate(), `beforeend`);
+render(siteTripEventsElement, createTripEventsTemplate(), `beforeend`);
+render(siteTripEventsElement, createTripDayTemplate(), `beforeend`);
 
 const siteTripEventsList = siteMainElement.querySelector(`.trip-events__list`);
 
 for (let i = 0; i < TASK_COUNT; i++) {
-  render(siteTripEventsList, createTripItemTemplate());
+  render(siteTripEventsList, createTripItemTemplate(), `afterbegin`);
 }
