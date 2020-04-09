@@ -2,10 +2,11 @@ import {createTripTemplate} from "./components/trip.js";
 import {createCostTemplate} from "./components/cost.js";
 import {createMenuTemplate} from "./components/menu.js";
 import {createFiltersTemplate} from "./components/filters.js";
-import {createTripEventEditTemplate} from "./components/tripedit.js";
-import {createTripEventsTemplate} from "./components/tripevents.js";
-import {createTripDayTemplate} from "./components/tripday.js";
-import {createTripItemTemplate} from "./components/tripitem.js";
+import {createTripEventEditTemplate} from "./components/trip-edit.js";
+import {createTripEventsTemplate} from "./components/trip-events.js";
+import {createTripDayTemplate} from "./components/trip-day.js";
+import {createTripItemTemplate} from "./components/trip-item.js";
+import {task} from "./mock/trip-events.js";
 
 const TASK_COUNT = 3;
 
@@ -27,7 +28,7 @@ render(siteTripInfoElement, createCostTemplate(), `beforeend`);
 render(siteTripControlsElement, createMenuTemplate(), `afterbegin`);
 render(siteTripControlsElement, createFiltersTemplate(), `beforeend`);
 render(siteTripEventsElement, createTripEventEditTemplate(), `beforeend`);
-render(siteTripEventsElement, createTripEventsTemplate(), `beforeend`);
+render(siteTripEventsElement, createTripEventsTemplate(task), `beforeend`);
 render(siteTripEventsElement, createTripDayTemplate(), `beforeend`);
 
 const siteTripEventsList = siteMainElement.querySelector(`.trip-events__list`);
