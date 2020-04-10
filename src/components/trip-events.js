@@ -54,6 +54,7 @@ const createPhotosMarkup = (photo) => {
 
 export const createTripEventsTemplate = (task) => {
   const {transport, pointNames, city, description, offers, photos} = task;
+
   const transportRideMarkup = transport.map((it) => createRideItemMarkup(it)).join(`\n`);
   const stopPointMarkup = pointNames.map((it) => createStopPointMarkup(it)).join(`\n`);
   const cityMarkup = city.map((it) => createCityMarkup(it)).join(`\n`);

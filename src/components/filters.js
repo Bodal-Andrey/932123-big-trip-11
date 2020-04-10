@@ -15,8 +15,8 @@ const createFilterMarkup = (value, isChecked) => {
 };
 
 export const createFiltersTemplate = (task) => {
-  const {list} = task;
-  const filterMarkup = list.map((it, i) => createFilterMarkup(it, i === 0)).join(`\n`);
+
+  const filterMarkup = task.map((it, i) => createFilterMarkup(it, i === 0)).join(`\n`);
   return (
     `<h2 class="visually-hidden">Filter events</h2>
       <form class="trip-filters" action="#" method="get">
