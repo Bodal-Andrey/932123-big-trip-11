@@ -1,23 +1,35 @@
-export const createTripItemTemplate = () => {
+import {formatDate} from "../utils.js";
+
+export const createTripItemTemplate = (task) => {
+  const {city, startDate, endDate, price, routePoint} = task;
+  const icon = routePoint.img;
+  const routeType = routePoint.type;
+  const randomCity = city[Math.floor(Math.random() * city.length)];
+  const startDateMarkup = formatDate(startDate);
+  const endDateMarkup = formatDate(endDate);
+  const startTimeMarkup = startDateMarkup.slice(9);
+  const endTimeMarkup = endDateMarkup.slice(9);
+  const priceMarkup = price;
+
   return (
     `<li class="trip-events__item">
       <div class="event">
         <div class="event__type">
-          <img class="event__type-icon" width="42" height="42" src="img/icons/taxi.png" alt="Event type icon">
+          <img class="event__type-icon" width="42" height="42" src="${icon}" alt="Event type icon">
         </div>
-        <h3 class="event__title">Taxi to Amsterdam</h3>
+        <h3 class="event__title">${routeType} ${randomCity}</h3>
   
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="2019-03-18T10:30">10:30</time>
+            <time class="event__start-time" datetime="${startDateMarkup}">${startTimeMarkup}</time>
             &mdash;
-            <time class="event__end-time" datetime="2019-03-18T11:00">11:00</time>
+            <time class="event__end-time" datetime="${endDateMarkup}">${endTimeMarkup}</time>
           </p>
           <p class="event__duration">30M</p>
         </div>
   
         <p class="event__price">
-          &euro;&nbsp;<span class="event__price-value">20</span>
+          &euro;&nbsp;<span class="event__price-value">${priceMarkup}</span>
         </p>
   
         <h4 class="visually-hidden">Offers:</h4>
@@ -25,7 +37,7 @@ export const createTripItemTemplate = () => {
           <li class="event__offer">
             <span class="event__offer-title">Order Uber</span>
             &plus;
-            &euro;&nbsp;<span class="event__offer-price">20</span>
+            &euro;&nbsp;<span class="event__offer-price">${priceMarkup}</span>
            </li>
         </ul>
   

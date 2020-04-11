@@ -35,5 +35,5 @@ render(siteTripEventsElement, createTripDayTemplate(), `beforeend`);
 const siteTripEventsList = siteMainElement.querySelector(`.trip-events__list`);
 
 for (let i = 0; i < TASK_COUNT; i++) {
-  render(siteTripEventsList, createTripItemTemplate(), `afterbegin`);
+  render(siteTripEventsList, createTripItemTemplate(task), `afterbegin`);
 }
