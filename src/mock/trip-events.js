@@ -1,8 +1,10 @@
+import {getRandomInteger} from "../utils.js";
+
 const transportTo = [`Taxi to`, `Bus to`, `Train to`, `Ship to`, `Transport to`, `Drive to`, `Flight to`];
 const stopPointNames = [`Check-in in`, `Sightseeing in`, `Restaurant in`];
-const cityNames = [`Amsterdam`, `Geneva`, `Chamonix`, `Saint Petersburg`];
+const cityNames = [`Amsterdam`, `Geneva`, `Chamonix`, `Saint Petersburg`, `London`, `Berlin`, `Tokyo`];
 const text = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus. `;
-const offerNames = [`Luggage`, `Comfort`, `Meal`, `Seats`, `Train`];
+const offerNames = [`Add luggage`, `Switch to comfort class`, `Add meal`, `Choose seats`, `Travel by train`, `Order Uber`, `Rent a car`, `Add breakfast`, `Book tickets`, `Lunch in city`];
 const routePoints = [
   {type: `Taxi to`, img: `img/icons/taxi.png`},
   {type: `Bus to`, img: `img/icons/bus.png`},
@@ -25,11 +27,6 @@ const getNames = (arr) => {
     valueNames.push(name);
   }
   return valueNames;
-};
-
-const getRandomInteger = (min, max) => {
-  const rand = min - 0.5 + Math.random() * (max - min + 1);
-  return Math.round(rand);
 };
 
 const getRandomArray = (arr, min, max) => {
@@ -88,6 +85,10 @@ const generateCard = () => {
   };
 };
 
-const task = generateCard();
+const generateCards = (amount) => {
+  return Array(amount).fill(``).map(() => generateCard()).sort((currentCard, nextCard) => currentCard.startDate - nextCard.startDate);
+};
+
+const task = generateCards(5);
 
 export {task};

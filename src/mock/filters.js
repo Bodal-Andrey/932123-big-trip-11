@@ -1,3 +1,1 @@
-const list = [`Everything`, `Future`, `Past`];
-
-export {list};
+export const list = [`Everything`, `Future`, `Past`];

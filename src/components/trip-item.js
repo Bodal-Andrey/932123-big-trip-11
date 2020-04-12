@@ -34,11 +34,7 @@ export const createTripItemTemplate = (task) => {
   
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-          <li class="event__offer">
-            <span class="event__offer-title">Order Uber</span>
-            &plus;
-            &euro;&nbsp;<span class="event__offer-price">${priceMarkup}</span>
-           </li>
+          
         </ul>
   
         <button class="event__rollup-btn" type="button">
