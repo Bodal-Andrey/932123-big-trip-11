@@ -44,7 +44,7 @@ dates.forEach((date, dateIndex) => {
   .forEach((_card) => {
     render(day.querySelector(`.trip-events__list`));
   });
-  render(tripDays, day);
+  render(tripDays, day, `afterbegin`);
 });
 
 
