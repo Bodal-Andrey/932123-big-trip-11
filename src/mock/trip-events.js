@@ -1,5 +1,7 @@
 import {getRandomInteger} from "../utils.js";
 
+const CARDS_AMOUNT = 15;
+
 const transportTo = [`Taxi to`, `Bus to`, `Train to`, `Ship to`, `Transport to`, `Drive to`, `Flight to`];
 const stopPointNames = [`Check-in in`, `Sightseeing in`, `Restaurant in`];
 const cityNames = [`Amsterdam`, `Geneva`, `Chamonix`, `Saint Petersburg`, `London`, `Berlin`, `Tokyo`];
@@ -89,6 +91,6 @@ const generateCards = (amount) => {
   return Array(amount).fill(``).map(() => generateCard()).sort((currentCard, nextCard) => currentCard.startDate - nextCard.startDate);
 };
 
-const task = generateCards(5);
+const cards = generateCards(CARDS_AMOUNT);
 
-export {task};
+export {cards};

@@ -1,5 +1,5 @@
-export const createEventOfferTemplate = (task) => {
-  const {offers} = task;
+export const createEventOfferTemplate = (cards) => {
+  const {offers} = cards;
   const offerMarkup = offers[Math.floor(Math.random() * offers.length)];
   const offerValue = offerMarkup.value;
   const offerPrice = offerMarkup.price;

@@ -1,10 +1,7 @@
+import {getRandomInteger} from "../utils.js";
+
 const cities = [`Amsterdam`, `Geneva`, `Chamonix`, `Saint Petersburg`, `London`, `Berlin`, `Tokyo`];
 const months = [`Jan`, `Fab`, `Mar`, `Apr`, `May`, `Jun`, `Jul`, `Aug`, `Sep`, `Oct`, `Nov`, `Dec`];
-
-const getRandomInteger = (min, max) => {
-  const rand = min - 0.5 + Math.random() * (max - min + 1);
-  return Math.round(rand);
-};
 
 const generateTrip = () => {
   const startDate = getRandomInteger(1, 31);
@@ -20,6 +17,4 @@ const generateTrip = () => {
   };
 };
 
-const trip = generateTrip();
-
-export {trip};
+export const trip = generateTrip();
