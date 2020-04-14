@@ -2,7 +2,7 @@ import {formatDate} from "../utils.js";
 
 export const createTripItemTemplate = (cards) => {
   const {city, startDate, endDate, price, routePoint} = cards;
-  const icon = routePoint.img;
+  const icon = routePoint.picture;
   const routeType = routePoint.type;
   const randomCity = city[Math.floor(Math.random() * city.length)];
   const startDateMarkup = formatDate(startDate);

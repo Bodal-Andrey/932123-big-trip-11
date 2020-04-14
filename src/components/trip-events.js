@@ -27,8 +27,8 @@ const createCityMarkup = (value) => {
 };
 
 const createAdditionalOfferMarkup = (offer, isChecked) => {
-  const {value, price} = offer;
-  const name = value.toLowerCase();
+  const {data, price} = offer;
+  const name = data.toLowerCase();
 
   return (
     `<div class="event__offer-selector">
@@ -40,7 +40,7 @@ const createAdditionalOfferMarkup = (offer, isChecked) => {
     ${isChecked ? `checked` : ``}
     >
     <label class="event__offer-label" for="event-offer-${name}-1">
-      <span class="event__offer-title">${value}</span>
+      <span class="event__offer-title">${data}</span>
       &plus;
       &euro;&nbsp;<span class="event__offer-price">${price}</span>
     </label>
@@ -66,7 +66,7 @@ export const createTripEventsTemplate = (cards) => {
   const endDateMarkup = formatDate(endDate);
   const priceMarkup = price;
   const randomCity = city[Math.floor(Math.random() * city.length)];
-  const icon = routePoint.img;
+  const icon = routePoint.picture;
   const routeType = routePoint.type;
 
   return (

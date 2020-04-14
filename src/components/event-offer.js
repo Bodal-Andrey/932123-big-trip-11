@@ -1,7 +1,7 @@
 export const createEventOfferTemplate = (cards) => {
   const {offers} = cards;
   const offerMarkup = offers[Math.floor(Math.random() * offers.length)];
-  const offerValue = offerMarkup.value;
+  const offerValue = offerMarkup.data;
   const offerPrice = offerMarkup.price;
 
   return (

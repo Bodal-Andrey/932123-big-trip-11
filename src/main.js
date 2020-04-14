@@ -8,7 +8,7 @@ import {createTripDayTemplate} from "./components/trip-day.js";
 import {createTripItemTemplate} from "./components/trip-item.js";
 import {createEventOfferTemplate} from "./components/event-offer.js";
 import {createTripDaysItemTemplate} from "./components/trip-days-item.js";
-import {cards} from "./mock/trip-events.js";
+import {cards} from "./mock/cards.js";
 import {list} from "./mock/filters.js";
 import {trip} from "./mock/trip.js";
 import {cost} from "./mock/cost.js";
@@ -37,16 +37,15 @@ const dates = [
   new Set(cards.map((item) => new Date(item.startDate).toDateString()))
 ];
 
-dates.forEach((date, dateIndex) => {
+const bebe = dates.forEach((date, dateIndex) => {
   const day = createElement(createTripDaysItemTemplate(new Date(date), dateIndex + 1));
 
   cards.filter((_card) => new Date(_card.startDate).toDateString() === date)
   .forEach((_card) => {
-    render(day.querySelector(`.trip-events__list`));
+    render(day.querySelector(`.trip-events__list`), createTripItemTemplate(_card));
   });
   render(tripDays, day, `afterbegin`);
 });
-
 
 const siteTripEventsList = siteMainElement.querySelector(`.trip-events__list`);
 
