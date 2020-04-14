@@ -37,7 +37,7 @@ const dates = [
   new Set(cards.map((item) => new Date(item.startDate).toDateString()))
 ];
 
-const bebe = dates.forEach((date, dateIndex) => {
+dates.forEach((date, dateIndex) => {
   const day = createElement(createTripDaysItemTemplate(new Date(date), dateIndex + 1));
 
   cards.filter((_card) => new Date(_card.startDate).toDateString() === date)
