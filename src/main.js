@@ -56,5 +56,5 @@ for (let i = 0; i < getRandomInteger(2, 5); i++) {
 const eventOfferList = siteTripEventsList.querySelectorAll(`.event__selected-offers`);
 
 for (let i = 0; i < eventOfferList.length; i++) {
-  render(eventOfferList[i], createElement(createEventOfferTemplate(cards[getRandomInteger(1, 10)]), `beforeend`));
+  render(eventOfferList[i], createElement(createEventOfferTemplate(cards[i]), `beforeend`));
 }
