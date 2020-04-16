@@ -21,7 +21,7 @@ const createElement = (template) => {
   return element.firstChild;
 };
 
-const render = (container, template, place) => {
+const render = (container, template, place = `afterbegin`) => {
   if (place === `afterbegin`) {
     container.prepend(template);
   } else if (place === `beforeend`) {

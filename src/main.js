@@ -12,7 +12,7 @@ import {cards} from "./mock/cards.js";
 import {list} from "./mock/filters.js";
 import {trip} from "./mock/trip.js";
 import {cost} from "./mock/cost.js";
-import {getRandomInteger, createElement, render} from "./utils.js";
+import {createElement, render} from "./utils.js";
 
 const siteHeaderElement = document.querySelector(`.page-header`);
 const siteMainElement = document.querySelector(`.page-main`);
@@ -34,27 +34,23 @@ render(siteTripEventsElement, createElement(createTripDayTemplate()), `beforeend
 const tripDays = document.querySelector(`.trip-days`);
 
 const dates = [
-  new Set(cards.map((item) => new Date(item.startDate).toDateString()))
+  ...new Set(cards.map((item) => new Date(item.startDate).toDateString()))
 ];
 
 dates.forEach((date, dateIndex) => {
-  const day = createElement(createTripDaysItemTemplate(new Date(date), dateIndex + 1));
+  const day = createElement(createTripDaysItemTemplate(date, dateIndex + 1));
 
   cards.filter((_card) => new Date(_card.startDate).toDateString() === date)
   .forEach((_card) => {
-    render(day.querySelector(`.trip-events__list`), createTripItemTemplate(_card));
+    render(day.querySelector(`.trip-events__list`), createElement(createTripItemTemplate(_card)));
   });
-  render(tripDays, day, `afterbegin`);
+
+  const eventOfferList = document.querySelectorAll(`.event__selected-offers`);
+  for (let i = 0; i < eventOfferList.length; i++) {
+    render(eventOfferList[i], createElement(createEventOfferTemplate(cards[i]), `beforeend`));
+  }
+
+  render(tripDays, day, `beforeend`);
 });
 
-const siteTripEventsList = siteMainElement.querySelector(`.trip-events__list`);
 
-for (let i = 0; i < getRandomInteger(2, 5); i++) {
-  render(siteTripEventsList, createElement(createTripItemTemplate(cards[i])), `afterbegin`);
-}
-
-const eventOfferList = siteTripEventsList.querySelectorAll(`.event__selected-offers`);
-
-for (let i = 0; i < eventOfferList.length; i++) {
-  render(eventOfferList[i], createElement(createEventOfferTemplate(cards[i]), `beforeend`));
-}

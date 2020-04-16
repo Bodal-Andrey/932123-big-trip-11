@@ -2,34 +2,21 @@ import {getRandomInteger} from "../utils.js";
 
 const CARDS_AMOUNT = 15;
 
-const transportTo = [`Taxi to`, `Bus to`, `Train to`, `Ship to`, `Transport to`, `Drive to`, `Flight to`];
-const stopPointNames = [`Check-in in`, `Sightseeing in`, `Restaurant in`];
+const types = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`, `Check-in`, `Sightseeing`, `Restaurant`];
 const cityNames = [`Amsterdam`, `Geneva`, `Chamonix`, `Saint Petersburg`, `London`, `Berlin`, `Tokyo`];
 const text = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus. `;
 const offerNames = [`Add luggage`, `Switch to comfort class`, `Add meal`, `Choose seats`, `Travel by train`, `Order Uber`, `Rent a car`, `Add breakfast`, `Book tickets`, `Lunch in city`];
-const routePoints = [
-  {type: `Taxi to`, picture: `img/icons/taxi.png`},
-  {type: `Bus to`, picture: `img/icons/bus.png`},
-  {type: `Train to`, picture: `img/icons/train.png`},
-  {type: `Ship to`, picture: `img/icons/ship.png`},
-  {type: `Transport to`, picture: `img/icons/transport.png`},
-  {type: `Drive to`, picture: `img/icons/drive.png`},
-  {type: `Flight to`, picture: `img/icons/flight.png`},
-  {type: `Check-in in`, picture: `img/icons/check-in.png`},
-  {type: `Sightseeing in`, picture: `img/icons/sightseeing.png`},
-  {type: `Restaurant in`, picture: `img/icons/restaurant.png`}
-];
 
 const arrayOfSentence = text.split(`.`).splice(1, 10);
 
-const getNames = (arr) => {
-  const valueNames = [];
-  for (let valueName of arr) {
-    const name = valueName.slice(0, -3);
-    valueNames.push(name);
-  }
-  return valueNames;
-};
+// const getNames = (arr) => {
+//   const valueNames = [];
+//   for (let valueName of arr) {
+//     const name = valueName.slice(0, -3);
+//     valueNames.push(name);
+//   }
+//   return valueNames;
+// };
 
 const getRandomArray = (arr, min, max) => {
   const description = [];
@@ -74,16 +61,15 @@ const generateCard = () => {
   const endDate = getRandomDate();
 
   return {
-    transport: getNames(transportTo),
-    pointNames: getNames(stopPointNames),
-    city: cityNames,
+    types,
+    cities: cityNames,
     startDate: Math.min(startDate, endDate),
     endDate: Math.max(startDate, endDate),
     price: getRandomInteger(10, 100),
     description: getRandomArray(arrayOfSentence, 1, 5).join(`. `),
     offers: getRandomArray(generateOfferNames(), 0, 5),
+    offerNames,
     photos: getRandomArray(generatePhotos(), 1, 5),
-    routePoint: routePoints[getRandomInteger(0, routePoints.length)],
   };
 };
 

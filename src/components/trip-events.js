@@ -54,20 +54,20 @@ const createPhotosMarkup = (photo) => {
   );
 };
 
-export const createTripEventsTemplate = (cards) => {
-  const {transport, pointNames, city, startDate, endDate, price, description, offers, photos, routePoint} = cards;
+export const createTripEventsTemplate = (card) => {
+  const {types, cities, startDate, endDate, price, description, offers, photos} = card;
 
-  const transportRideMarkup = transport.map((it) => createRideItemMarkup(it)).join(`\n`);
-  const stopPointMarkup = pointNames.map((it) => createStopPointMarkup(it)).join(`\n`);
-  const cityMarkup = city.map((it) => createCityMarkup(it)).join(`\n`);
+  const transportRideMarkup = types.map((it) => createRideItemMarkup(it)).join(`\n`);
+  const stopPointMarkup = types.map((it) => createStopPointMarkup(it)).join(`\n`);
+  const cityMarkup = cities.map((it) => createCityMarkup(it)).join(`\n`);
   const additionalOfferMarkup = offers.map((it, i) => createAdditionalOfferMarkup(it, i === 0)).join(`\n`);
   const photosMarkup = photos.map((it) => createPhotosMarkup(it)).join(`\n`);
   const startDateMarkup = formatDate(startDate);
   const endDateMarkup = formatDate(endDate);
   const priceMarkup = price;
-  const randomCity = city[Math.floor(Math.random() * city.length)];
-  const icon = routePoint.picture;
-  const routeType = routePoint.type;
+  const randomCity = cities[Math.floor(Math.random() * cities.length)];
+  const routeType = types[Math.floor(Math.random() * types.length)];
+  const iconType = routeType.toLowerCase();
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -75,7 +75,7 @@ export const createTripEventsTemplate = (cards) => {
         <div class="event__type-wrapper">
           <label class="event__type  event__type-btn" for="event-type-toggle-1">
             <span class="visually-hidden">Choose event type</span>
-            <img class="event__type-icon" width="17" height="17" src="${icon}" alt="Event type icon">
+            <img class="event__type-icon" width="17" height="17" src="img/icons/${iconType}.png" alt="Event type icon">
           </label>
           <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
   

@@ -1,5 +1,5 @@
-export const createTripTemplate = (cards) => {
-  const {startPoint, intermediatePoint, endPoint, month, startDate, endDate} = cards;
+export const createTripTemplate = (card) => {
+  const {startPoint, intermediatePoint, endPoint, month, startDate, endDate} = card;
 
   return (
     `<section class="trip-main__trip-info  trip-info">

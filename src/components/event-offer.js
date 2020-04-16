@@ -1,14 +1,14 @@
-export const createEventOfferTemplate = (cards) => {
-  const {offers} = cards;
-  const offerMarkup = offers[Math.floor(Math.random() * offers.length)];
-  const offerValue = offerMarkup.data;
-  const offerPrice = offerMarkup.price;
+import {getRandomInteger} from "../utils.js";
+
+export const createEventOfferTemplate = (card) => {
+  const {offerNames, price} = card;
+  const offer = offerNames[Math.floor(Math.random() * offerNames.length)];
 
   return (
     `<li class="event__offer">
-    <span class="event__offer-title">${offerValue}</span>
+    <span class="event__offer-title">${offer}</span>
     &plus;
-    &euro;&nbsp;<span class="event__offer-price">${offerPrice}</span>
+    &euro;&nbsp;<span class="event__offer-price">${price}</span>
    </li>`
   );
 };

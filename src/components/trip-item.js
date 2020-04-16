@@ -1,21 +1,22 @@
 import {formatDate} from "../utils.js";
 
-export const createTripItemTemplate = (cards) => {
-  const {city, startDate, endDate, price, routePoint} = cards;
-  const icon = routePoint.picture;
-  const routeType = routePoint.type;
-  const randomCity = city[Math.floor(Math.random() * city.length)];
+export const createTripItemTemplate = (card) => {
+  const {types, cities, startDate, endDate, price} = card;
+
+  const randomCity = cities[Math.floor(Math.random() * cities.length)];
   const startDateMarkup = formatDate(startDate);
   const endDateMarkup = formatDate(endDate);
   const startTimeMarkup = startDateMarkup.slice(9);
   const endTimeMarkup = endDateMarkup.slice(9);
   const priceMarkup = price;
+  const routeType = types[Math.floor(Math.random() * types.length)];
+  const iconType = routeType.toLowerCase();
 
   return (
     `<li class="trip-events__item">
       <div class="event">
         <div class="event__type">
-          <img class="event__type-icon" width="42" height="42" src="${icon}" alt="Event type icon">
+          <img class="event__type-icon" width="42" height="42" src="img/icons/${iconType}.png" alt="Event type icon">
         </div>
         <h3 class="event__title">${routeType} ${randomCity}</h3>
   
