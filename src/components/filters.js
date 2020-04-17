@@ -14,14 +14,14 @@ const createFilterMarkup = (value, isChecked) => {
   );
 };
 
-export const createFiltersTemplate = (list) => {
-
+export const createFiltersTemplate = () => {
+  const list = [`Everything`, `Future`, `Past`];
   const filterMarkup = list.map((it, i) => createFilterMarkup(it, i === 0)).join(`\n`);
+
   return (
-    `<h2 class="visually-hidden">Filter events</h2>
-      <form class="trip-filters" action="#" method="get">
+    `<form class="trip-filters" action="#" method="get">
         ${filterMarkup}  
       <button class="visually-hidden" type="submit">Accept filter</button>
-    </form>`
+     </form>`
   );
 };

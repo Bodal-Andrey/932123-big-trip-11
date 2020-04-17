@@ -1,5 +1,3 @@
-import {getRandomInteger} from "../utils.js";
-
 export const createEventOfferTemplate = (card) => {
   const {offerNames, price} = card;
   const offer = offerNames[Math.floor(Math.random() * offerNames.length)];

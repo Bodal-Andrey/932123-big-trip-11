@@ -9,9 +9,6 @@ import {createTripItemTemplate} from "./components/trip-item.js";
 import {createEventOfferTemplate} from "./components/event-offer.js";
 import {createTripDaysItemTemplate} from "./components/trip-days-item.js";
 import {cards} from "./mock/cards.js";
-import {list} from "./mock/filters.js";
-import {trip} from "./mock/trip.js";
-import {cost} from "./mock/cost.js";
 import {createElement, render} from "./utils.js";
 
 const siteHeaderElement = document.querySelector(`.page-header`);
@@ -20,13 +17,13 @@ const siteTripMainElement = siteHeaderElement.querySelector(`.trip-main`);
 const siteTripControlsElement = siteHeaderElement.querySelector(`.trip-controls`);
 const siteTripEventsElement = siteMainElement.querySelector(`.trip-events`);
 
-render(siteTripMainElement, createElement(createTripTemplate(trip)), `afterbegin`);
+render(siteTripMainElement, createElement(createTripTemplate(cards)), `afterbegin`);
 
 const siteTripInfoElement = siteTripMainElement.querySelector(`.trip-info`);
 
-render(siteTripInfoElement, createElement(createCostTemplate(cost)), `beforeend`);
+render(siteTripInfoElement, createElement(createCostTemplate(cards[0])), `beforeend`);
 render(siteTripControlsElement, createElement(createMenuTemplate()), `afterbegin`);
-render(siteTripControlsElement, createElement(createFiltersTemplate(list)), `beforeend`);
+render(siteTripControlsElement, createElement(createFiltersTemplate()), `beforeend`);
 render(siteTripEventsElement, createElement(createTripEventEditTemplate()), `beforeend`);
 render(siteTripEventsElement, createElement(createTripEventsTemplate(cards[0])), `beforeend`);
 render(siteTripEventsElement, createElement(createTripDayTemplate()), `beforeend`);
