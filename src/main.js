@@ -24,7 +24,6 @@ render(siteTripInfoElement, createElement(createCostTemplate(cards)), `beforeend
 render(siteTripControlsElement, createElement(createMenuTemplate()), `afterbegin`);
 render(siteTripControlsElement, createElement(createFiltersTemplate()), `beforeend`);
 render(siteTripEventsElement, createElement(createTripEventEditTemplate()), `beforeend`);
-render(siteTripEventsElement, createElement(createTripEventsTemplate(cards[0])), `beforeend`);
 render(siteTripEventsElement, createElement(createTripDayTemplate()), `beforeend`);
 
 const tripDays = document.querySelector(`.trip-days`);
@@ -37,11 +36,15 @@ dates.forEach((date, dateIndex) => {
   const day = createElement(createTripDaysItemTemplate(date, dateIndex + 1));
 
   cards.filter((_card) => new Date(_card.startDate).toDateString() === date)
-  .forEach((_card) => {
-    render(day.querySelector(`.trip-events__list`), createElement(createTripItemTemplate(_card)));
+  .forEach((_card, index) => {
+    if (index === 0) {
+      render(day.querySelector(`.trip-events__list`), createElement(createTripEventsTemplate(_card)));
+    } else {
+      render(day.querySelector(`.trip-events__list`), createElement(createTripItemTemplate(_card)));
+    }
   });
 
-  render(tripDays, day, `beforeend`);
+  render(tripDays, day);
 });
 
 
