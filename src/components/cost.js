@@ -1,10 +1,13 @@
 export const createCostTemplate = (card) => {
-  const {price} = card;
-  const cost = price * 50;
+  const arr = [];
+  card.forEach((it) => {
+    arr.push(it.price);
+  });
+  const sumOfCosts = arr.reduce((sum, current) => sum + current, 0);
 
   return (
     `<p class="trip-info__cost">
-      Total: &euro;&nbsp;<span class="trip-info__cost-value">${cost}</span>
+      Total: &euro;&nbsp;<span class="trip-info__cost-value">${sumOfCosts}</span>
     </p>`
   );
 };

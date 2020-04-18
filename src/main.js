@@ -6,7 +6,6 @@ import {createTripEventEditTemplate} from "./components/trip-edit.js";
 import {createTripEventsTemplate} from "./components/trip-events.js";
 import {createTripDayTemplate} from "./components/trip-day.js";
 import {createTripItemTemplate} from "./components/trip-item.js";
-import {createEventOfferTemplate} from "./components/event-offer.js";
 import {createTripDaysItemTemplate} from "./components/trip-days-item.js";
 import {cards} from "./mock/cards.js";
 import {createElement, render} from "./utils.js";
@@ -21,7 +20,7 @@ render(siteTripMainElement, createElement(createTripTemplate(cards)), `afterbegi
 
 const siteTripInfoElement = siteTripMainElement.querySelector(`.trip-info`);
 
-render(siteTripInfoElement, createElement(createCostTemplate(cards[0])), `beforeend`);
+render(siteTripInfoElement, createElement(createCostTemplate(cards)), `beforeend`);
 render(siteTripControlsElement, createElement(createMenuTemplate()), `afterbegin`);
 render(siteTripControlsElement, createElement(createFiltersTemplate()), `beforeend`);
 render(siteTripEventsElement, createElement(createTripEventEditTemplate()), `beforeend`);
@@ -41,11 +40,6 @@ dates.forEach((date, dateIndex) => {
   .forEach((_card) => {
     render(day.querySelector(`.trip-events__list`), createElement(createTripItemTemplate(_card)));
   });
-
-  const eventOfferList = document.querySelectorAll(`.event__selected-offers`);
-  for (let i = 0; i < eventOfferList.length; i++) {
-    render(eventOfferList[i], createElement(createEventOfferTemplate(cards[i]), `beforeend`));
-  }
 
   render(tripDays, day, `beforeend`);
 });

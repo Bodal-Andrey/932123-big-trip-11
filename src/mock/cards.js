@@ -59,7 +59,6 @@ const generateCard = () => {
     price: getRandomInteger(10, 100),
     description: getRandomArray(arrayOfSentence, 1, 5).join(`. `),
     offers: getRandomArray(generateOfferNames(), 0, 5),
-    offerNames,
     photos: getRandomArray(generatePhotos(), 1, 5),
   };
 };
