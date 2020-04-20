@@ -1,4 +1,4 @@
-import {formatDate} from "../utils.js";
+import {formatDate, createElement} from "../utils.js";
 
 const createOfferMarkup = (offer) => {
   const {data, price} = offer;
@@ -12,7 +12,7 @@ const createOfferMarkup = (offer) => {
   );
 };
 
-export const createTripItemTemplate = (card) => {
+const createTripItemTemplate = (card) => {
   const {type, city, startDate, endDate, price, offers} = card;
 
   const startDateMarkup = formatDate(startDate);
@@ -54,3 +54,27 @@ export const createTripItemTemplate = (card) => {
     </li>`
   );
 };
+
+export default class TripItem {
+  constructor(card) {
+    this._card = card;
+
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createTripItemTemplate(this._card);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
