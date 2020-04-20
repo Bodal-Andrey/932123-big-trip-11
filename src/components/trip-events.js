@@ -1,4 +1,4 @@
-import {formatDate} from "../utils.js";
+import {formatDate, createElement} from "../utils.js";
 
 const createAdditionalOfferMarkup = (offer, isChecked) => {
   const {data, price} = offer;
@@ -28,7 +28,7 @@ const createPhotosMarkup = (photo) => {
   );
 };
 
-export const createTripEventsTemplate = (card) => {
+const createTripEventsTemplate = (card) => {
   const {type, city, startDate, endDate, price, description, offers, photos} = card;
 
   const additionalOfferMarkup = offers.map((it, i) => createAdditionalOfferMarkup(it, i === 0)).join(`\n`);
@@ -166,3 +166,27 @@ export const createTripEventsTemplate = (card) => {
     </form>`
   );
 };
+
+export default class TripEvents {
+  constructor(card) {
+    this._card = card;
+
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createTripEventsTemplate(this._card);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

@@ -1,4 +1,6 @@
-export const createTripTemplate = (cards) => {
+import {createElement} from "../utils.js";
+
+const createTripTemplate = (cards) => {
   const newCards = cards.sort((a, b) => a.startDate - b.startDate);
   const cities = [];
   newCards.forEach((it) => {
@@ -24,3 +26,27 @@ export const createTripTemplate = (cards) => {
     </section>`
   );
 };
+
+export default class Trip {
+  constructor(cards) {
+    this._cards = cards;
+
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createTripTemplate(this._cards);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

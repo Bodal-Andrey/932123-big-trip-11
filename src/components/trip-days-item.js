@@ -1,4 +1,6 @@
-export const createTripDaysItemTemplate = (date, index) => {
+import {createElement} from "../utils.js";
+
+const createTripDaysItemTemplate = (date, index) => {
   const dateItem = date.slice(4, 10);
 
   return (
@@ -12,3 +14,28 @@ export const createTripDaysItemTemplate = (date, index) => {
   </li>`
   );
 };
+
+export default class TripDaysItem {
+  constructor(date, index) {
+    this._date = date;
+    this._index = index;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createTripDaysItemTemplate(this._date, this._index);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
+
