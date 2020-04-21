@@ -1,4 +1,4 @@
-import {createElement} from "../utils.js";
+import {createElement} from "../utils.js"
 
 const createTripTemplate = (cards) => {
   const newCards = cards.sort((a, b) => a.startDate - b.startDate);
