@@ -11,7 +11,7 @@ import NoTripItemComponent from "./components/no-trip-item.js";
 import NoTripComponent from "./components/no-trip.js";
 import NoCostComponent from "./components/no-cost.js";
 import {cards} from "./mock/cards.js";
-import {render} from "./utils.js";
+import {render, replace} from "./utils/render.js";
 
 const siteHeaderElement = document.querySelector(`.page-header`);
 const siteMainElement = document.querySelector(`.page-main`);
@@ -19,17 +19,17 @@ const siteTripMainElement = siteHeaderElement.querySelector(`.trip-main`);
 const siteTripControlsElement = siteHeaderElement.querySelector(`.trip-controls`);
 const siteTripEventsElement = siteMainElement.querySelector(`.trip-events`);
 
-render(siteTripControlsElement, new MenuComponent().getElement(), `afterbegin`);
-render(siteTripControlsElement, new FiltersComponent().getElement(), `beforeend`);
+render(siteTripControlsElement, new MenuComponent(), `afterbegin`);
+render(siteTripControlsElement, new FiltersComponent(), `beforeend`);
 
 const getAllMarkup = () => {
-  render(siteTripMainElement, new TripComponent(cards).getElement(), `afterbegin`);
+  render(siteTripMainElement, new TripComponent(cards), `afterbegin`);
 
   const siteTripInfoElement = siteTripMainElement.querySelector(`.trip-info`);
 
-  render(siteTripInfoElement, new CostComponent(cards).getElement(), `beforeend`);
-  render(siteTripEventsElement, new TripEventEditComponent().getElement(), `beforeend`);
-  render(siteTripEventsElement, new TripDayComponent().getElement(), `beforeend`);
+  render(siteTripInfoElement, new CostComponent(cards), `beforeend`);
+  render(siteTripEventsElement, new TripEventEditComponent(), `beforeend`);
+  render(siteTripEventsElement, new TripDayComponent(), `beforeend`);
 
   const tripDays = document.querySelector(`.trip-days`);
 
@@ -38,24 +38,21 @@ const getAllMarkup = () => {
   ];
 
   dates.forEach((date, dateIndex) => {
-    const day = new TripDaysItemComponent(date, dateIndex + 1).getElement();
+    const day = new TripDaysItemComponent(date, dateIndex + 1);
 
     cards.filter((_card) => new Date(_card.startDate).toDateString() === date)
     .forEach((_card) => {
-      const tripItem = new TripItemComponent(_card).getElement();
-      const tripEvents = new TripEventsComponent(_card).getElement();
-      const tripEventsList = day.querySelector(`.trip-events__list`);
+      const tripItem = new TripItemComponent(_card);
+      const tripEvents = new TripEventsComponent(_card);
+      const tripEventsList = day.getElement().querySelector(`.trip-events__list`);
       const tripEventsToTripItem = () => {
-        tripEventsList.replaceChild(tripItem, tripEvents);
+        replace(tripItem, tripEvents);
       };
       const tripItemToTripEvents = () => {
-        tripEventsList.replaceChild(tripEvents, tripItem);
+        replace(tripEvents, tripItem);
       };
 
       render(tripEventsList, tripItem);
-
-      const eventForm = tripEventsList.querySelector(`form`);
-      const eventRollupButton = tripItem.querySelector(`.event__rollup-btn`);
 
       const onEscKeyDown = (evt) => {
         const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
@@ -65,12 +62,12 @@ const getAllMarkup = () => {
         }
       };
 
-      if (eventRollupButton.addEventListener(`click`, () => {
+      if (tripItem.setClickHandler(() => {
         render(tripEventsList, tripEvents);
         tripItemToTripEvents();
         document.addEventListener(`keydown`, onEscKeyDown);
       })) {
-        eventForm.addEventListener(`submit`, (evt) => {
+        day.setSubmitHandler((evt) => {
           evt.preventDefault();
           tripEventsToTripItem();
           document.removeEventListener(`keydown`, onEscKeyDown);
@@ -84,12 +81,12 @@ const getAllMarkup = () => {
 };
 
 if (cards.length === 0) {
-  render(siteTripMainElement, new NoTripComponent().getElement(), `afterbegin`);
+  render(siteTripMainElement, new NoTripComponent(), `afterbegin`);
 
   const siteTripInfoElement = siteTripMainElement.querySelector(`.trip-info`);
 
-  render(siteTripInfoElement, new NoCostComponent().getElement(), `beforeend`);
-  render(siteTripEventsElement, new NoTripItemComponent().getElement(), `beforeend`);
+  render(siteTripInfoElement, new NoCostComponent(), `beforeend`);
+  render(siteTripEventsElement, new NoTripItemComponent(), `beforeend`);
 } else {
   getAllMarkup();
 }

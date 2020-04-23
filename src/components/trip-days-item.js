@@ -1,4 +1,4 @@
-import {createElement} from "../utils.js";
+import AbstractComponent from "./abstract-component.js";
 
 const createTripDaysItemTemplate = (date, index) => {
   const dateItem = date.slice(4, 10);
@@ -15,27 +15,18 @@ const createTripDaysItemTemplate = (date, index) => {
   );
 };
 
-export default class TripDaysItem {
+export default class TripDaysItem extends AbstractComponent {
   constructor(date, index) {
+    super();
     this._date = date;
     this._index = index;
-    this._element = null;
   }
 
   getTemplate() {
     return createTripDaysItemTemplate(this._date, this._index);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  setSubmitHandler(handler) {
+    this.getElement().querySelector(`form`).addEventListener(`submit`, handler);
   }
 }
-
