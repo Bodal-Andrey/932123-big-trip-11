@@ -1,6 +1,6 @@
 import AbstractComponent from "./abstract-component.js";
 
-const createTripDaysItemTemplate = (date, index) => {
+const createDayWithTripsTemplate = (date, index) => {
   const dateItem = date.slice(4, 10);
 
   return (
@@ -15,7 +15,7 @@ const createTripDaysItemTemplate = (date, index) => {
   );
 };
 
-export default class TripDaysItem extends AbstractComponent {
+export default class DayWithTrips extends AbstractComponent {
   constructor(date, index) {
     super();
     this._date = date;
@@ -23,7 +23,7 @@ export default class TripDaysItem extends AbstractComponent {
   }
 
   getTemplate() {
-    return createTripDaysItemTemplate(this._date, this._index);
+    return createDayWithTripsTemplate(this._date, this._index);
   }
 
   setSubmitHandler(handler) {

@@ -1,6 +1,6 @@
 import AbstractComponent from "./abstract-component.js";
 
-const createTripDayTemplate = () => {
+const createListOfDaysTemplate = () => {
   return (
     `<ul class="trip-days">
       
@@ -8,8 +8,8 @@ const createTripDayTemplate = () => {
   );
 };
 
-export default class TripDay extends AbstractComponent {
+export default class ListOfDays extends AbstractComponent {
   getTemplate() {
-    return createTripDayTemplate();
+    return createListOfDaysTemplate();
   }
 }

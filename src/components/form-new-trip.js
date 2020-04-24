@@ -29,7 +29,7 @@ const createPhotosMarkup = (photo) => {
   );
 };
 
-const createTripEventsTemplate = (card) => {
+const createFormNewTripTemplate = (card) => {
   const {type, city, startDate, endDate, price, description, offers, photos} = card;
 
   const additionalOfferMarkup = offers.map((it, i) => createAdditionalOfferMarkup(it, i === 0)).join(`\n`);
@@ -168,13 +168,13 @@ const createTripEventsTemplate = (card) => {
   );
 };
 
-export default class TripEvents extends AbstractComponent {
+export default class FormNewTrip extends AbstractComponent {
   constructor(card) {
     super();
     this._card = card;
   }
 
   getTemplate() {
-    return createTripEventsTemplate(this._card);
+    return createFormNewTripTemplate(this._card);
   }
 }
