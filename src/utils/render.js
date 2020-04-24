@@ -4,7 +4,7 @@ const createElement = (template) => {
   return element.firstChild;
 };
 
-const render = (container, component, place = `beforeend`) => {
+const renderElement = (container, component, place = `beforeend`) => {
   if (place === `afterbegin`) {
     container.prepend(component.getElement());
   } else if (place === `beforeend`) {
@@ -24,4 +24,4 @@ const replace = (newComponent, oldComponent) => {
   }
 };
 
-export {createElement, render, replace};
+export {createElement, renderElement, replace};

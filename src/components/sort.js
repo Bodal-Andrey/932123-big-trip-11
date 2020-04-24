@@ -1,6 +1,6 @@
 import AbstractComponent from "./abstract-component.js";
 
-const createTripEventEditTemplate = () => {
+const createSortTemplate = () => {
   return (
     `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
       <span class="trip-sort__item  trip-sort__item--day">Day</span>
@@ -35,8 +35,8 @@ const createTripEventEditTemplate = () => {
   );
 };
 
-export default class TripEventEdit extends AbstractComponent {
+export default class Sort extends AbstractComponent {
   getTemplate() {
-    return createTripEventEditTemplate();
+    return createSortTemplate();
   }
 }
