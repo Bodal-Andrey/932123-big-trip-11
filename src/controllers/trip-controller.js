@@ -66,9 +66,12 @@ export default class TripController {
   render(events) {
     renderElement(this._container, this._sortComponent);
     renderElement(this._container, this._dayComponent);
-    renderEvents(events, this._dayComponent);
+
     if (events.length === 0) {
       renderElement(this._container, this._noTripItemComponent, `beforeend`);
+      return;
     }
+
+    renderEvents(events, this._dayComponent);
   }
 }
