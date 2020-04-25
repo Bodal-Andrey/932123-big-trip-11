@@ -1,4 +1,5 @@
-import {formatDate, createElement} from "../utils.js";
+import AbstractComponent from "./abstract-component.js";
+import {formatDate} from "../utils/common.js";
 
 const createAdditionalOfferMarkup = (offer, isChecked) => {
   const {data, price} = offer;
@@ -28,7 +29,7 @@ const createPhotosMarkup = (photo) => {
   );
 };
 
-const createTripEventsTemplate = (card) => {
+const createFormNewTripTemplate = (card) => {
   const {type, city, startDate, endDate, price, description, offers, photos} = card;
 
   const additionalOfferMarkup = offers.map((it, i) => createAdditionalOfferMarkup(it, i === 0)).join(`\n`);
@@ -167,26 +168,13 @@ const createTripEventsTemplate = (card) => {
   );
 };
 
-export default class TripEvents {
+export default class FormNewTrip extends AbstractComponent {
   constructor(card) {
+    super();
     this._card = card;
-
-    this._element = null;
   }
 
   getTemplate() {
-    return createTripEventsTemplate(this._card);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+    return createFormNewTripTemplate(this._card);
   }
 }

@@ -1,4 +1,5 @@
-import {formatDate, createElement} from "../utils.js";
+import AbstractComponent from "./abstract-component.js";
+import {formatDate} from "../utils/common.js";
 
 const createOfferMarkup = (offer) => {
   const {data, price} = offer;
@@ -55,26 +56,17 @@ const createTripItemTemplate = (card) => {
   );
 };
 
-export default class TripItem {
+export default class TripItem extends AbstractComponent {
   constructor(card) {
+    super();
     this._card = card;
-
-    this._element = null;
   }
 
   getTemplate() {
     return createTripItemTemplate(this._card);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  setClickHandler(handler) {
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, handler);
   }
 }

@@ -15,18 +15,5 @@ const getRandomInteger = (min, max) => {
   return Math.round(rand);
 };
 
-const createElement = (template) => {
-  const element = document.createElement(`div`);
-  element.innerHTML = template;
-  return element.firstChild;
-};
 
-const render = (container, template, place = `beforeend`) => {
-  if (place === `afterbegin`) {
-    container.prepend(template);
-  } else if (place === `beforeend`) {
-    container.append(template);
-  }
-};
-
-export {formatDate, getRandomInteger, createElement, render};
+export {formatDate, getRandomInteger};
