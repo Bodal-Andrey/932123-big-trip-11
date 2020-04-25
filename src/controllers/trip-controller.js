@@ -1,7 +1,7 @@
 import FormNewTrip from "../components/form-new-trip.js";
 import TripItem from "../components/trip-item.js";
 import DayWithTrips from "../components/day-with-trips.js";
-import Sort from "../components/sort.js";
+import Sort, {SortType} from "../components/sort.js";
 import ListOfDays from "../components/list-of-days.js";
 import NoTripItem from "../components/no-trip-item.js";
 import {cards} from "../mock/cards.js";
@@ -54,6 +54,24 @@ const renderEvents = (events, tripDay) => {
   });
 };
 
+const getSortedEvents = (events, sortType, from, to) => {
+  let sortedEvents = [];
+  const showingEvents = events.slice();
+
+  switch (sortType) {
+    case SortType.TIME:
+      sortedEvents = showingEvents.sort((a, b) => (b.endDate - b.startDate) - (a.endDate - a.startDate));
+      break;
+    case SortType.PRICE:
+      sortedEvents = showingEvents.sort((a, b) => b.price - a.price);
+      break;
+    case SortType.EVENT:
+      sortedEvents = showingEvents;
+      break;
+  }
+  return sortedEvents.slice(from, to);
+};
+
 export default class TripController {
   constructor(container) {
     this._container = container;
@@ -73,5 +91,12 @@ export default class TripController {
     }
 
     renderEvents(events, this._dayComponent);
+
+    this._sortComponent.setSortTypeChangeHandler((sortType) => {
+      const sortedEvents = getSortedEvents(events, sortType, 0, events.length);
+      this._dayComponent.innerHTML = ``;
+
+      renderEvents(sortedEvents, this._dayComponent);
+    });
   }
 }
