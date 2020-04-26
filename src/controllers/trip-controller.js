@@ -11,7 +11,7 @@ const renderEvents = (events, tripDay, isDefaultSorting = true) => {
   const dates = isDefaultSorting ? [...new Set(events.map((item) => new Date(item.startDate).toDateString()))] : [true];
 
   dates.forEach((date, dateIndex) => {
-    const day = isDefaultSorting ? new DayWithTrips(date, dateIndex + 1) : new DayWithTrips(0, 0);
+    const day = isDefaultSorting ? new DayWithTrips(date, dateIndex + 1) : new DayWithTrips();
 
     events.filter((_card) => {
       return isDefaultSorting ? new Date(_card.startDate).toDateString() === date : _card;

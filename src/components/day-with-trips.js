@@ -1,15 +1,7 @@
 import AbstractComponent from "./abstract-component.js";
 
 const createDayWithTripsTemplate = (date, index) => {
-  if (date === 0 && index === 0) {
-    return (
-      `<li class="trip-days__item  day">
-      <div class="day__info"></div>
-  
-      <ul class="trip-events__list"></ul>
-    </li>`
-    );
-  } else {
+  if (date && index) {
     const dateItem = date.slice(4, 10);
 
     return (
@@ -17,6 +9,17 @@ const createDayWithTripsTemplate = (date, index) => {
       <div class="day__info">
         <span class="day__counter">${index}</span>
         <time class="day__date" datetime="2019-03-18">${dateItem}</time>
+      </div>
+  
+      <ul class="trip-events__list"></ul>
+    </li>`
+    );
+  } else {
+    return (
+      `<li class="trip-days__item  day">
+      <div class="day__info">
+        <span class="day__counter"></span>
+        <time class="day__date" datetime="2019-03-18"></time>
       </div>
   
       <ul class="trip-events__list"></ul>
