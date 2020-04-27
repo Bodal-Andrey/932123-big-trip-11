@@ -1,22 +1,21 @@
 import FormNewTrip from "../components/form-new-trip.js";
 import TripItem from "../components/trip-item.js";
 import DayWithTrips from "../components/day-with-trips.js";
-import Sort from "../components/sort.js";
+import Sort, {SortType} from "../components/sort.js";
 import ListOfDays from "../components/list-of-days.js";
 import NoTripItem from "../components/no-trip-item.js";
 import {cards} from "../mock/cards.js";
 import {renderElement, replace} from "../utils/render.js";
 
-const renderEvents = (events, tripDay) => {
-  const dates = [
-    ...new Set(events.map((item) => new Date(item.startDate).toDateString()))
-  ];
+const renderEvents = (events, tripDay, isDefaultSorting = true) => {
+  const dates = isDefaultSorting ? [...new Set(events.map((item) => new Date(item.startDate).toDateString()))] : [true];
 
   dates.forEach((date, dateIndex) => {
-    const day = new DayWithTrips(date, dateIndex + 1);
+    const day = isDefaultSorting ? new DayWithTrips(date, dateIndex + 1) : new DayWithTrips();
 
-    cards.filter((_card) => new Date(_card.startDate).toDateString() === date)
-    .forEach((_card) => {
+    events.filter((_card) => {
+      return isDefaultSorting ? new Date(_card.startDate).toDateString() === date : _card;
+    }).forEach((_card) => {
       const tripItem = new TripItem(_card);
       const newTrip = new FormNewTrip(_card);
       const tripEventsList = day.getElement().querySelector(`.trip-events__list`);
@@ -73,5 +72,26 @@ export default class TripController {
     }
 
     renderEvents(events, this._dayComponent);
+
+    this._sortComponent.setSortTypeChangeHandler((sortType) => {
+      let sortedEvents = [];
+      let isDefaultSorting = false;
+
+      switch (sortType) {
+        case SortType.TIME:
+          sortedEvents = cards.slice().sort((a, b) => (b.endDate - b.startDate) - (a.endDate - a.startDate));
+          break;
+        case SortType.PRICE:
+          sortedEvents = cards.slice().sort((a, b) => b.price - a.price);
+          break;
+        case SortType.EVENT:
+          sortedEvents = cards.slice();
+          isDefaultSorting = true;
+          break;
+      }
+
+      this._dayComponent.getElement().innerHTML = ``;
+      renderEvents(sortedEvents, this._dayComponent, isDefaultSorting);
+    });
   }
 }
