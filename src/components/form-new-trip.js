@@ -29,6 +29,18 @@ const createPhotosMarkup = (photo) => {
   );
 };
 
+const createFavoriteMarkup = (name) => {
+  return (
+    `<input id="event-${name}-1" class="event__${name}-checkbox  visually-hidden" type="checkbox" name="event-${name}" checked>
+    <label class="event__${name}-btn" for="event-${name}-1">
+      <span class="visually-hidden">Add to ${name}</span>
+      <svg class="event__${name}-icon" width="28" height="28" viewBox="0 0 28 28">
+        <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
+      </svg>
+    </label>`
+  );
+};
+
 const createFormNewTripTemplate = (card) => {
   const {type, city, startDate, endDate, price, description, offers, photos} = card;
 
@@ -36,6 +48,7 @@ const createFormNewTripTemplate = (card) => {
   const photosMarkup = photos.map((it) => createPhotosMarkup(it)).join(`\n`);
   const startDateMarkup = formatDate(startDate);
   const endDateMarkup = formatDate(endDate);
+  const favorite = createFavoriteMarkup(`favorite`);
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -143,6 +156,7 @@ const createFormNewTripTemplate = (card) => {
   
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
         <button class="event__reset-btn" type="reset">Cancel</button>
+        ${favorite}
       </header>
       <section class="event__details">
         <section class="event__section  event__section--offers">
@@ -176,5 +190,9 @@ export default class FormNewTrip extends AbstractComponent {
 
   getTemplate() {
     return createFormNewTripTemplate(this._card);
+  }
+
+  setFavoriteHandler(handler) {
+    this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, handler);
   }
 }
