@@ -13,7 +13,7 @@ const createOfferMarkup = (offer) => {
   );
 };
 
-const createTripItemTemplate = (card) => {
+const createEventItemTemplate = (card) => {
   const {type, city, startDate, endDate, price, offers} = card;
 
   const startDateMarkup = formatDate(startDate);
@@ -56,14 +56,14 @@ const createTripItemTemplate = (card) => {
   );
 };
 
-export default class TripItem extends AbstractComponent {
+export default class EventItem extends AbstractComponent {
   constructor(card) {
     super();
     this._card = card;
   }
 
   getTemplate() {
-    return createTripItemTemplate(this._card);
+    return createEventItemTemplate(this._card);
   }
 
   setClickHandler(handler) {

@@ -1,6 +1,6 @@
 import AbstractComponent from "./abstract-component.js";
 
-const createDayWithTripsTemplate = (date, index) => {
+const createDayTemplate = (date, index) => {
   const dateVariant = date ? date : ``;
   const indexVariant = index ? index : ``;
   const dateItem = dateVariant.slice(4, 10);
@@ -17,7 +17,7 @@ const createDayWithTripsTemplate = (date, index) => {
   );
 };
 
-export default class DayWithTrips extends AbstractComponent {
+export default class Day extends AbstractComponent {
   constructor(date, index) {
     super();
     this._date = date;
@@ -25,10 +25,6 @@ export default class DayWithTrips extends AbstractComponent {
   }
 
   getTemplate() {
-    return createDayWithTripsTemplate(this._date, this._index);
-  }
-
-  setSubmitHandler(handler) {
-    this.getElement().querySelector(`form`).addEventListener(`submit`, handler);
+    return createDayTemplate(this._date, this._index);
   }
 }

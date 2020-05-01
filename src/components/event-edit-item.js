@@ -1,4 +1,4 @@
-import AbstractComponent from "./abstract-component.js";
+import AbstractSmartComponent from "./abstract-smart-component.js";
 import {formatDate} from "../utils/common.js";
 
 const createAdditionalOfferMarkup = (offer, isChecked) => {
@@ -29,9 +29,9 @@ const createPhotosMarkup = (photo) => {
   );
 };
 
-const createFavoriteMarkup = (name) => {
+const createFavoriteMarkup = (name, isChecked = false) => {
   return (
-    `<input id="event-${name}-1" class="event__${name}-checkbox  visually-hidden" type="checkbox" name="event-${name}" checked>
+    `<input id="event-${name}-1" class="event__${name}-checkbox  visually-hidden" type="checkbox" name="event-${name}" ${isChecked ? `checked` : ``}>
     <label class="event__${name}-btn" for="event-${name}-1">
       <span class="visually-hidden">Add to ${name}</span>
       <svg class="event__${name}-icon" width="28" height="28" viewBox="0 0 28 28">
@@ -41,14 +41,14 @@ const createFavoriteMarkup = (name) => {
   );
 };
 
-const createFormNewTripTemplate = (card) => {
+const createEventEditItemTemplate = (card) => {
   const {type, city, startDate, endDate, price, description, offers, photos} = card;
 
   const additionalOfferMarkup = offers.map((it, i) => createAdditionalOfferMarkup(it, i === 0)).join(`\n`);
   const photosMarkup = photos.map((it) => createPhotosMarkup(it)).join(`\n`);
   const startDateMarkup = formatDate(startDate);
   const endDateMarkup = formatDate(endDate);
-  const favorite = createFavoriteMarkup(`favorite`);
+  const favorite = createFavoriteMarkup(`favorite`, !card.isFavorite);
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -157,6 +157,9 @@ const createFormNewTripTemplate = (card) => {
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
         <button class="event__reset-btn" type="reset">Cancel</button>
         ${favorite}
+        <button class="event__rollup-btn" type="button">
+          <span class="visually-hidden">Open event</span>
+        </button>
       </header>
       <section class="event__details">
         <section class="event__section  event__section--offers">
@@ -182,17 +185,42 @@ const createFormNewTripTemplate = (card) => {
   );
 };
 
-export default class FormNewTrip extends AbstractComponent {
+export default class EventEditItem extends AbstractSmartComponent {
   constructor(card) {
     super();
     this._card = card;
+    this._submitHandler = null;
+    this._subscribeToChange();
   }
 
   getTemplate() {
-    return createFormNewTripTemplate(this._card);
+    return createEventEditItemTemplate(this._card);
+  }
+
+  recoveryListeners() {
+    this.setSubmitHandler(this._submitHandler);
+    this._subscribeToChange();
+  }
+
+  rerender() {
+    super.rerender();
+  }
+
+  _subscribeToChange() {
+
+  }
+
+  reset() {
+    this.rerender();
   }
 
   setFavoriteHandler(handler) {
     this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, handler);
+
+    this._submitHandler = handler;
+  }
+
+  setSubmitHandler(handler) {
+    this.getElement().querySelector(`.event__save-btn`).addEventListener(`submit`, handler);
   }
 }
