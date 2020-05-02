@@ -9,6 +9,8 @@ import PointController from "./point-controller.js";
 const renderEvents = (events, tripDay, onDataChange, onViewChange, isDefaultSorting = true) => {
   const dates = isDefaultSorting ? [...new Set(events.map((item) => new Date(item.startDate).toDateString()))] : [true];
 
+  const pointControllers = [];
+
   dates.forEach((date, dateIndex) => {
     const day = isDefaultSorting ? new Day(date, dateIndex + 1) : new Day();
 
@@ -17,10 +19,12 @@ const renderEvents = (events, tripDay, onDataChange, onViewChange, isDefaultSort
     }).forEach((_card) => {
       const pointController = new PointController(day, onDataChange, onViewChange);
       pointController.renderPoint(_card);
+      pointControllers.push(pointController);
     });
 
     renderElement(tripDay.getElement(), day);
   });
+  return pointControllers;
 };
 
 export default class TripController {
@@ -37,6 +41,8 @@ export default class TripController {
   }
 
   render(events) {
+    this._events = events;
+
     renderElement(this._container, this._sortComponent);
     renderElement(this._container, this._daysComponent);
 
@@ -45,8 +51,7 @@ export default class TripController {
       return;
     }
 
-    const newEvents = renderEvents(events, this._daysComponent, this._onDataChange, this._onViewChange);
-    this._showedPointControllers = this._showedPointControllers.concat(newEvents);
+    this._showedPointControllers = renderEvents(events, this._daysComponent, this._onDataChange, this._onViewChange);
 
     this._sortComponent.setSortTypeChangeHandler((sortType) => {
       let sortedEvents = [];
@@ -66,8 +71,7 @@ export default class TripController {
       }
 
       this._daysComponent.getElement().innerHTML = ``;
-      const sortEvents = renderEvents(sortedEvents, this._daysComponent, this._onDataChange, this._onViewChange, isDefaultSorting);
-      this._showedPointControllers = sortEvents;
+      this._showedPointControllers = renderEvents(sortedEvents, this._daysComponent, this._onDataChange, this._onViewChange, isDefaultSorting);
     });
   }
 
