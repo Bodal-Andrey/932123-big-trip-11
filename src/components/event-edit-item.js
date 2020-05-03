@@ -41,8 +41,8 @@ const createFavoriteMarkup = (name, isChecked = false) => {
   );
 };
 
-const createEventEditItemTemplate = (card) => {
-  const {type, city, startDate, endDate, price, description, offers, photos} = card;
+const createEventEditItemTemplate = (card, type) => {
+  const {city, startDate, endDate, price, description, offers, photos} = card;
 
   const additionalOfferMarkup = offers.map((it, i) => createAdditionalOfferMarkup(it, i === 0)).join(`\n`);
   const photosMarkup = photos.map((it) => createPhotosMarkup(it)).join(`\n`);
@@ -51,7 +51,7 @@ const createEventEditItemTemplate = (card) => {
   const favorite = createFavoriteMarkup(`favorite`, !card.isFavorite);
 
   return (
-    `<form class="trip-events__item  event  event--edit" action="#" method="post">
+    `<form class="event  event--edit" action="#" method="post">
       <header class="event__header">
         <div class="event__type-wrapper">
           <label class="event__type  event__type-btn" for="event-type-toggle-1">
@@ -189,12 +189,16 @@ export default class EventEditItem extends AbstractSmartComponent {
   constructor(card) {
     super();
     this._card = card;
+    this._type = card.type;
     this._submitHandler = null;
     this._subscribeToChange();
+
+    this._handleTypeClick = this._handleTypeClick.bind(this);
+    this._handleCancelClick = this._handleCancelClick.bind(this);
   }
 
   getTemplate() {
-    return createEventEditItemTemplate(this._card);
+    return createEventEditItemTemplate(this._card, this._type);
   }
 
   recoveryListeners() {
@@ -207,10 +211,24 @@ export default class EventEditItem extends AbstractSmartComponent {
   }
 
   _subscribeToChange() {
+    this.getElement().querySelector(`.event__type-list`).addEventListener(`click`, this._handleTypeClick);
+    this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._handleCancelClick);
+  }
 
+  _handleCancelClick() {
+    this.reset();
+  }
+
+  _handleTypeClick(evt) {
+    if (evt.target.tagName === `LABEL`) {
+      return;
+    }
+    this._type = evt.target.value;
+    this.rerender();
   }
 
   reset() {
+    this._type = this._card.type;
     this.rerender();
   }
 
@@ -222,5 +240,13 @@ export default class EventEditItem extends AbstractSmartComponent {
 
   setSubmitHandler(handler) {
     this.getElement().querySelector(`.event__save-btn`).addEventListener(`submit`, handler);
+  }
+
+  setDisplaceHandler(handler) {
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, handler);
+  }
+
+  setCancelHandler(handler) {
+    this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, handler);
   }
 }

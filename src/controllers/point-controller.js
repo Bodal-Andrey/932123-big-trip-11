@@ -37,13 +37,24 @@ export default class PointController {
     });
 
     this._eventItem.setClickHandler(() => {
-      renderElement(tripEventsList, this._eventEditItem);
+      const tripEventsItem = this._container.getElement().querySelector(`.trip-events__item`);
+      renderElement(tripEventsItem, this._eventEditItem);
       this._eventItemToEventEditItem();
       document.addEventListener(`keydown`, this._onEscKeyDown);
     });
 
     this._eventEditItem.setSubmitHandler((evt) => {
       evt.preventDefault();
+      this._eventEditItemToEventItem();
+      document.removeEventListener(`keydown`, this._onEscKeyDown);
+    });
+
+    this._eventEditItem.setDisplaceHandler(() => {
+      this._eventEditItemToEventItem();
+      document.removeEventListener(`keydown`, this._onEscKeyDown);
+    });
+
+    this._eventEditItem.setCancelHandler(() => {
       this._eventEditItemToEventItem();
       document.removeEventListener(`keydown`, this._onEscKeyDown);
     });
