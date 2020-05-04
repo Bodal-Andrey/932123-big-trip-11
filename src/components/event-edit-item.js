@@ -42,7 +42,7 @@ const createFavoriteMarkup = (name, isChecked = false) => {
 };
 
 const createEventEditItemTemplate = (card, type) => {
-  const {city, startDate, endDate, price, description, offers, photos} = card;
+  const {city, startDate, endDate, price, description, photos, offers} = card;
 
   const additionalOfferMarkup = offers.map((it, i) => createAdditionalOfferMarkup(it, i === 0)).join(`\n`);
   const photosMarkup = photos.map((it) => createPhotosMarkup(it)).join(`\n`);
@@ -59,66 +59,65 @@ const createEventEditItemTemplate = (card, type) => {
             <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
           </label>
           <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
-  
           <div class="event__type-list">
-            <fieldset class="event__type-group">
-              <legend class="visually-hidden">Transfer</legend>
-
-            <div class="event__type-item">
-              <input id="event-type-taxi-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="taxi">
-              <label class="event__type-label  event__type-label--taxi" for="event-type-taxi-1">Taxi</label>
-            </div>
-
-            <div class="event__type-item">
-              <input id="event-type-bus-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="bus">
-              <label class="event__type-label  event__type-label--bus" for="event-type-bus-1">Bus</label>
-            </div>
-
-            <div class="event__type-item">
-              <input id="event-type-train-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="train">
-              <label class="event__type-label  event__type-label--train" for="event-type-train-1">Train</label>
-            </div>
-
-            <div class="event__type-item">
-              <input id="event-type-ship-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="ship">
-              <label class="event__type-label  event__type-label--ship" for="event-type-ship-1">Ship</label>
-            </div>
-
-            <div class="event__type-item">
-              <input id="event-type-transport-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="transport">
-              <label class="event__type-label  event__type-label--transport" for="event-type-transport-1">Transport</label>
-            </div>
-
-            <div class="event__type-item">
-              <input id="event-type-drive-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="drive">
-              <label class="event__type-label  event__type-label--drive" for="event-type-drive-1">Drive</label>
-            </div>
-
-            <div class="event__type-item">
-              <input id="event-type-flight-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="flight" checked>
-              <label class="event__type-label  event__type-label--flight" for="event-type-flight-1">Flight</label>
-            </div>
-            </fieldset>
- 
-            <fieldset class="event__type-group">
-              <legend class="visually-hidden">Activity</legend>
-
-            <div class="event__type-item">
-              <input id="event-type-check-in-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="check-in">
-              <label class="event__type-label  event__type-label--check-in" for="event-type-check-in-1">Check-in</label>
-            </div>
-
-            <div class="event__type-item">
-              <input id="event-type-sightseeing-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="sightseeing">
-              <label class="event__type-label  event__type-label--sightseeing" for="event-type-sightseeing-1">Sightseeing</label>
-            </div>
-
-            <div class="event__type-item">
-              <input id="event-type-restaurant-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="restaurant">
-              <label class="event__type-label  event__type-label--restaurant" for="event-type-restaurant-1">Restaurant</label>
-            </div>
-            </fieldset>
+          <fieldset class="event__type-group">
+            <legend class="visually-hidden">Transfer</legend>
+      
+          <div class="event__type-item">
+            <input ${type === `taxi` && `checked`} id="event-type-taxi-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="taxi">
+            <label class="event__type-label  event__type-label--taxi" for="event-type-taxi-1">Taxi</label>
           </div>
+      
+          <div class="event__type-item">
+            <input ${type === `bus` && `checked`} id="event-type-bus-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="bus">
+            <label class="event__type-label  event__type-label--bus" for="event-type-bus-1">Bus</label>
+          </div>
+      
+          <div class="event__type-item">
+            <input ${type === `train` && `checked`} id="event-type-train-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="train">
+            <label class="event__type-label  event__type-label--train" for="event-type-train-1">Train</label>
+          </div>
+      
+          <div class="event__type-item">
+            <input ${type === `ship` && `checked`} id="event-type-ship-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="ship">
+            <label class="event__type-label  event__type-label--ship" for="event-type-ship-1">Ship</label>
+          </div>
+      
+          <div class="event__type-item">
+            <input ${type === `transport` && `checked`} id="event-type-transport-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="transport">
+            <label class="event__type-label  event__type-label--transport" for="event-type-transport-1">Transport</label>
+          </div>
+      
+          <div class="event__type-item">
+            <input ${type === `drive` && `checked`} id="event-type-drive-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="drive">
+            <label class="event__type-label  event__type-label--drive" for="event-type-drive-1">Drive</label>
+          </div>
+      
+          <div class="event__type-item">
+            <input ${type === `flight` && `checked`} id="event-type-flight-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="flight">
+            <label class="event__type-label  event__type-label--flight" for="event-type-flight-1">Flight</label>
+          </div>
+          </fieldset>
+      
+          <fieldset class="event__type-group">
+            <legend class="visually-hidden">Activity</legend>
+      
+          <div class="event__type-item">
+            <input ${type === `check-in` && `checked`} id="event-type-check-in-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="check-in">
+            <label class="event__type-label  event__type-label--check-in" for="event-type-check-in-1">Check-in</label>
+          </div>
+      
+          <div class="event__type-item">
+            <input ${type === `sightseeing` && `checked`} id="event-type-sightseeing-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="sightseeing">
+            <label class="event__type-label  event__type-label--sightseeing" for="event-type-sightseeing-1">Sightseeing</label>
+          </div>
+      
+          <div class="event__type-item">
+            <input ${type === `restaurant` && `checked`} id="event-type-restaurant-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="restaurant">
+            <label class="event__type-label  event__type-label--restaurant" for="event-type-restaurant-1">Restaurant</label>
+          </div>
+          </fieldset>
+        </div>
         </div>
   
         <div class="event__field-group  event__field-group--destination">
@@ -191,18 +190,22 @@ export default class EventEditItem extends AbstractSmartComponent {
     this._card = card;
     this._type = card.type;
     this._submitHandler = null;
-    this._subscribeToChange();
+    this._displaceHandler = null;
+    this._cancelHandler = null;
 
     this._handleTypeClick = this._handleTypeClick.bind(this);
-    this._handleCancelClick = this._handleCancelClick.bind(this);
+
+    this._subscribeToChange();
   }
 
   getTemplate() {
-    return createEventEditItemTemplate(this._card, this._type);
+    return createEventEditItemTemplate(this._card, this._type, this._offers);
   }
 
   recoveryListeners() {
     this.setSubmitHandler(this._submitHandler);
+    this.setDisplaceHandler(this._displaceHandler);
+    this.setCancelHandler(this._cancelHandler);
     this._subscribeToChange();
   }
 
@@ -212,11 +215,6 @@ export default class EventEditItem extends AbstractSmartComponent {
 
   _subscribeToChange() {
     this.getElement().querySelector(`.event__type-list`).addEventListener(`click`, this._handleTypeClick);
-    this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._handleCancelClick);
-  }
-
-  _handleCancelClick() {
-    this.reset();
   }
 
   _handleTypeClick(evt) {
@@ -234,19 +232,20 @@ export default class EventEditItem extends AbstractSmartComponent {
 
   setFavoriteHandler(handler) {
     this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, handler);
-
-    this._submitHandler = handler;
   }
 
   setSubmitHandler(handler) {
     this.getElement().querySelector(`.event__save-btn`).addEventListener(`submit`, handler);
+    this._submitHandler = handler;
   }
 
   setDisplaceHandler(handler) {
     this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, handler);
+    this._displaceHandler = handler;
   }
 
   setCancelHandler(handler) {
     this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, handler);
+    this._cancelHandler = handler;
   }
 }
