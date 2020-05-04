@@ -60,6 +60,7 @@ const generateCard = () => {
     description: getRandomArray(arrayOfSentence, 1, 5).join(`. `),
     offers: getRandomArray(generateOfferNames(), 0, 5),
     photos: getRandomArray(generatePhotos(), 1, 5),
+    isFavorite: false,
   };
 };
 
