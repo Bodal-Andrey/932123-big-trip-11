@@ -1,5 +1,4 @@
 import AbstractSmartComponent from "./abstract-smart-component.js";
-import {formatDate} from "../utils/common.js";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 
@@ -48,8 +47,6 @@ const createEventEditItemTemplate = (card, type) => {
 
   const additionalOfferMarkup = offers.map((it, i) => createAdditionalOfferMarkup(it, i === 0)).join(`\n`);
   const photosMarkup = photos.map((it) => createPhotosMarkup(it)).join(`\n`);
-  const startDateMarkup = formatDate(startDate);
-  const endDateMarkup = formatDate(endDate);
   const favorite = createFavoriteMarkup(`favorite`, !card.isFavorite);
 
   return (
@@ -139,12 +136,12 @@ const createEventEditItemTemplate = (card, type) => {
           <label class="visually-hidden" for="event-start-time-1">
             From
           </label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${startDateMarkup}">
+          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${startDate}">
           &mdash;
           <label class="visually-hidden" for="event-end-time-1">
             To
           </label>
-          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${endDateMarkup}">
+          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${endDate}">
         </div>
   
         <div class="event__field-group  event__field-group--price">
@@ -191,12 +188,16 @@ export default class EventEditItem extends AbstractSmartComponent {
     super();
     this._card = card;
     this._type = card.type;
+    this._isStartDate = !!card.startDate;
+    this._isEndDate = !!card.endDate;
     this._submitHandler = null;
     this._displaceHandler = null;
     this._cancelHandler = null;
+    this._flatpickr = null;
 
     this._handleTypeClick = this._handleTypeClick.bind(this);
 
+    this._applyFlatpickr();
     this._subscribeToChange();
   }
 
@@ -213,6 +214,35 @@ export default class EventEditItem extends AbstractSmartComponent {
 
   rerender() {
     super.rerender();
+
+    this._applyFlatpickr();
+  }
+
+  _applyFlatpickr() {
+    if (this._flatpickr) {
+      this._flatpickr.destroy();
+      this._flatpickr = null;
+    }
+
+    if (this._isStartDate) {
+      const startDateElement = this.getElement().querySelector(`#event-start-time-1`);
+      this._flatpickr = flatpickr(startDateElement, {
+        altInput: true,
+        allowInput: true,
+        dateFormat: `D/M/Y`,
+        defaultDate: this._card.startDate || `today`,
+      });
+    }
+
+    if (this._isEndDate) {
+      const endDateElement = this.getElement().querySelector(`#event-end-time-1`);
+      this._flatpickr = flatpickr(endDateElement, {
+        altInput: true,
+        allowInput: true,
+        dateFormat: `d-m-Y`,
+        defaultDate: this._card.endDate || `today`,
+      });
+    }
   }
 
   _subscribeToChange() {
