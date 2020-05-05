@@ -1,5 +1,7 @@
 import AbstractSmartComponent from "./abstract-smart-component.js";
 import {formatDate} from "../utils/common.js";
+import flatpickr from "flatpickr";
+import "flatpickr/dist/flatpickr.min.css";
 
 const createAdditionalOfferMarkup = (offer, isChecked) => {
   const {data, price} = offer;
