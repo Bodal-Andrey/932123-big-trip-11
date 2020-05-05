@@ -1,5 +1,5 @@
 import AbstractComponent from "./abstract-component.js";
-import {formatDate} from "../utils/common.js";
+import {formatTime, timeDifference} from "../utils/common.js";
 
 const createOfferMarkup = (offer) => {
   const {data, price} = offer;
@@ -16,10 +16,9 @@ const createOfferMarkup = (offer) => {
 const createEventItemTemplate = (card) => {
   const {type, city, startDate, endDate, price, offers} = card;
 
-  const startDateMarkup = formatDate(startDate);
-  const endDateMarkup = formatDate(endDate);
-  const startTimeMarkup = startDateMarkup.slice(9);
-  const endTimeMarkup = endDateMarkup.slice(9);
+  const startDateMarkup = formatTime(startDate);
+  const endDateMarkup = formatTime(endDate);
+  const timeDiff = timeDifference(endDate, startDate);
   const offerMarkup = offers.map((it) => createOfferMarkup(it)).join(`\n`);
 
   return (
@@ -32,11 +31,11 @@ const createEventItemTemplate = (card) => {
   
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${startDateMarkup}">${startTimeMarkup}</time>
+            <time class="event__start-time" datetime="${startDateMarkup}">${startDateMarkup}</time>
             &mdash;
-            <time class="event__end-time" datetime="${endDateMarkup}">${endTimeMarkup}</time>
+            <time class="event__end-time" datetime="${endDateMarkup}">${endDateMarkup}</time>
           </p>
-          <p class="event__duration">30M</p>
+          <p class="event__duration">${timeDiff}</p>
         </div>
   
         <p class="event__price">
