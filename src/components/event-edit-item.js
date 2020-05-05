@@ -191,7 +191,8 @@ export default class EventEditItem extends AbstractSmartComponent {
     this._submitHandler = null;
     this._displaceHandler = null;
     this._cancelHandler = null;
-    this._flatpickr = null;
+    this._flatpickrStart = null;
+    this._flatpickrEnd = null;
 
     this._handleTypeClick = this._handleTypeClick.bind(this);
 
@@ -217,30 +218,26 @@ export default class EventEditItem extends AbstractSmartComponent {
   }
 
   _applyFlatpickr() {
-    if (this._flatpickr) {
-      this._flatpickr.destroy();
-      this._flatpickr = null;
+    if (this._flatpickrStart || this._flatpickrEnd) {
+      this._flatpickrStart.destroy();
+      this._flatpickrEnd.destroy();
+      this._flatpickrStart = null;
+      this._flatpickrEnd = null;
     }
 
-    if (this._card.startDate) {
-      const startDateElement = this.getElement().querySelector(`#event-start-time-1`);
-      this._flatpickr = flatpickr(startDateElement, {
-        altInput: true,
-        allowInput: true,
-        dateFormat: `D/M/Y`,
-        defaultDate: this._card.startDate || `today`,
-      });
-    }
+    const options = {
+      altInput: true,
+      allowInput: true,
+      enableTime: true,
+      [`time_24hr`]: true,
+      altFormat: `d/m/Y H:i`,
+    };
 
-    if (this._card.endDate) {
-      const endDateElement = this.getElement().querySelector(`#event-end-time-1`);
-      this._flatpickr = flatpickr(endDateElement, {
-        altInput: true,
-        allowInput: true,
-        dateFormat: `d-m-Y`,
-        defaultDate: this._card.endDate || `today`,
-      });
-    }
+    const startDateElement = this.getElement().querySelector(`#event-start-time-1`);
+    this._flatpickrStart = flatpickr(startDateElement, Object.assign(options, {defaultDate: this._card.startDate}));
+
+    const endDateElement = this.getElement().querySelector(`#event-end-time-1`);
+    this._flatpickrEnd = flatpickr(endDateElement, Object.assign(options, {defaultDate: this._card.endDate}));
   }
 
   _subscribeToChange() {
