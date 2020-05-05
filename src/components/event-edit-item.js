@@ -188,8 +188,6 @@ export default class EventEditItem extends AbstractSmartComponent {
     super();
     this._card = card;
     this._type = card.type;
-    this._isStartDate = !!card.startDate;
-    this._isEndDate = !!card.endDate;
     this._submitHandler = null;
     this._displaceHandler = null;
     this._cancelHandler = null;
@@ -224,7 +222,7 @@ export default class EventEditItem extends AbstractSmartComponent {
       this._flatpickr = null;
     }
 
-    if (this._isStartDate) {
+    if (this._card.startDate) {
       const startDateElement = this.getElement().querySelector(`#event-start-time-1`);
       this._flatpickr = flatpickr(startDateElement, {
         altInput: true,
@@ -234,7 +232,7 @@ export default class EventEditItem extends AbstractSmartComponent {
       });
     }
 
-    if (this._isEndDate) {
+    if (this._card.endDate) {
       const endDateElement = this.getElement().querySelector(`#event-end-time-1`);
       this._flatpickr = flatpickr(endDateElement, {
         altInput: true,
