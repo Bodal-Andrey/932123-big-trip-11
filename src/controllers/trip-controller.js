@@ -28,9 +28,9 @@ const renderEvents = (events, tripDay, onDataChange, onViewChange, isDefaultSort
 };
 
 export default class TripController {
-  constructor(container) {
+  constructor(container, eventsModel) {
     this._container = container;
-    this._events = [];
+    this._eventsModel = eventsModel;
     this._showedPointControllers = [];
     this._sortComponent = new Sort();
     this._daysComponent = new Days();
@@ -40,8 +40,8 @@ export default class TripController {
     this._onViewChange = this._onViewChange.bind(this);
   }
 
-  render(events) {
-    this._events = events;
+  render() {
+    const events = this._eventsModel.getEvents();
 
     renderElement(this._container, this._sortComponent);
     renderElement(this._container, this._daysComponent);
@@ -76,15 +76,11 @@ export default class TripController {
   }
 
   _onDataChange(pointController, oldData, newData) {
-    const index = this._events.findIndex((it) => it === oldData);
+    const isSuccess = this._eventsModel.updateEvent(oldData.id, newData);
 
-    if (index === -1) {
-      return;
+    if (isSuccess) {
+      pointController.renderPoint(newData);
     }
-
-    this._events = [].concat(this._events.slice(0, index), newData, this._events.slice(index + 1));
-
-    pointController.renderPoint(this._events[index]);
   }
 
   _onViewChange() {

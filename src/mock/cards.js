@@ -52,6 +52,7 @@ const generateCard = () => {
   const endDate = getRandomDate();
 
   return {
+    id: String(new Date() + Math.random()),
     type: types[getRandomInteger(0, types.length - 1)],
     city: cities[getRandomInteger(0, cities.length - 1)],
     startDate: Math.min(startDate, endDate),
