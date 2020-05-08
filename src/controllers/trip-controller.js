@@ -1,8 +1,9 @@
 import Day from "../components/day.js";
-import Sort, {SortType} from "../components/sort.js";
+import Sort from "../components/sort.js";
 import Days from "../components/days.js";
 import NoTripItem from "../components/no-trip-item.js";
 import {cards} from "../mock/cards.js";
+import {SortType} from "../const.js";
 import {renderElement} from "../utils/render.js";
 import PointController from "./point-controller.js";
 
