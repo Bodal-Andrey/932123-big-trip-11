@@ -57,6 +57,7 @@ const generateCard = () => {
     city: cities[getRandomInteger(0, cities.length - 1)],
     startDate: Math.min(startDate, endDate),
     endDate: Math.max(startDate, endDate),
+    nowDate: new Date(),
     price: getRandomInteger(10, 100),
     description: getRandomArray(arrayOfSentence, 1, 5).join(`. `),
     offers: getRandomArray(generateOfferNames(), 0, 5),

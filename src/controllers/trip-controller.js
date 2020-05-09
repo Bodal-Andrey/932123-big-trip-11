@@ -32,7 +32,7 @@ export default class TripController {
   constructor(container, eventsModel) {
     this._container = container;
     this._eventsModel = eventsModel;
-    this._showedPointControllers = [];
+    this._showedEventControllers = [];
     this._sortComponent = new Sort();
     this._daysComponent = new Days();
     this._noTripItemComponent = new NoTripItem();
@@ -52,7 +52,7 @@ export default class TripController {
       return;
     }
 
-    this._showedPointControllers = renderEvents(events, this._daysComponent, this._onDataChange, this._onViewChange);
+    this._showedEventControllers = renderEvents(events, this._daysComponent, this._onDataChange, this._onViewChange);
 
     this._sortComponent.setSortTypeChangeHandler((sortType) => {
       let sortedEvents = [];
@@ -72,8 +72,24 @@ export default class TripController {
       }
 
       this._daysComponent.getElement().innerHTML = ``;
-      this._showedPointControllers = renderEvents(sortedEvents, this._daysComponent, this._onDataChange, this._onViewChange, isDefaultSorting);
+      this._showedEventControllers = renderEvents(sortedEvents, this._daysComponent, this._onDataChange, this._onViewChange, isDefaultSorting);
     });
+  }
+
+  _removeEvents() {
+    this._showedEventControllers.forEach((eventController) => eventController.destroy());
+    this._showedEventControllers = [];
+  }
+
+  _renderEvents(events) {
+    const newEvents = renderEvents(events, this._daysComponent, this._onDataChange, this._onViewChange);
+    this._showedEventControllers = this._showedEventControllers.concat(newEvents);
+    this._showingEventsCount = this._showedEventControllers.length;
+  }
+
+  _updateEvents() {
+    this._removeEvents();
+    this._renderEvents(this._eventsModel.getEvents());
   }
 
   _onDataChange(pointController, oldData, newData) {
@@ -85,6 +101,6 @@ export default class TripController {
   }
 
   _onViewChange() {
-    this._showedPointControllers.forEach((it) => it.setDefaultView());
+    this._showedEventControllers.forEach((it) => it.setDefaultView());
   }
 }

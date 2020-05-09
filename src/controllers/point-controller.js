@@ -1,6 +1,6 @@
 import EventEditItem from "../components/event-edit-item.js";
 import EventItem from "../components/event-item.js";
-import {renderElement, replace} from "../utils/render.js";
+import {renderElement, replace, remove} from "../utils/render.js";
 
 const Mode = {
   DEFAULT: `default`,
@@ -65,6 +65,12 @@ export default class PointController {
     } else {
       renderElement(tripEventsList, this._eventItem);
     }
+  }
+
+  destroy() {
+    remove(this._eventEditItem);
+    remove(this._eventItem);
+    document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
 
   setDefaultView() {
