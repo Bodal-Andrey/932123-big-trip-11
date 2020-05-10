@@ -1,18 +1,21 @@
 import {FilterType} from "../const.js";
 
-export const getEventsByFilter = (events, filterType) => {
-  let sortedEvents = [];
+export const getFutureEvents = (events) => {
+  return events.filter((event) => event.startDate > Date.now()).sort((a, b) => a.startDate - b.startDate);
+};
 
+export const getPastEvents = (events) => {
+  return events.filter((event) => event.endDate < Date.now()).sort((a, b) => a.startDate - b.startDate);
+};
+
+export const getEventsByFilter = (events, filterType) => {
   switch (filterType) {
-    case FilterType.FUTURE:
-      sortedEvents = events.slice().sort((a, b) => b.startDate - a.nowDate);
-      break;
-    case FilterType.PAST:
-      sortedEvents = events.slice().sort((a, b) => a.nowDate - b.endDate);
-      break;
     case FilterType.EVERYTHING:
-      sortedEvents = events.slice();
-      break;
+      return events.sort((a, b) => a.startDate - b.startDate);
+    case FilterType.FUTURE:
+      return getFutureEvents(events);
+    case FilterType.PAST:
+      return getPastEvents(events);
   }
-  return sortedEvents;
+  return events;
 };

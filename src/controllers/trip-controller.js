@@ -39,6 +39,9 @@ export default class TripController {
 
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
+    this._onFilterChange = this._onFilterChange.bind(this);
+
+    this._eventsModel.setFilterChangeHandler(this._onFilterChange);
   }
 
   render() {
@@ -84,7 +87,6 @@ export default class TripController {
   _renderEvents(events) {
     const newEvents = renderEvents(events, this._daysComponent, this._onDataChange, this._onViewChange);
     this._showedEventControllers = this._showedEventControllers.concat(newEvents);
-    this._showingEventsCount = this._showedEventControllers.length;
   }
 
   _updateEvents() {
@@ -102,5 +104,9 @@ export default class TripController {
 
   _onViewChange() {
     this._showedEventControllers.forEach((it) => it.setDefaultView());
+  }
+
+  _onFilterChange() {
+    this._updateEvents();
   }
 }
