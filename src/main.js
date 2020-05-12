@@ -27,3 +27,7 @@ renderElement(siteTripInfoElement, new Cost(cards), `beforeend`);
 
 const tripController = new TripController(siteTripEventsElement, eventsModel);
 tripController.render();
+
+document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, () => {
+  tripController.createEvent();
+});

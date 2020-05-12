@@ -11,7 +11,7 @@ export default class Events {
   }
 
   getEvents() {
-    return getEventsByFilter(this._events, this._acttiveFilterType);
+    return getEventsByFilter(this._events, this._activeFilterType);
   }
 
   setEvents(events) {

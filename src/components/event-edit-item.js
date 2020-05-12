@@ -1,5 +1,6 @@
 import AbstractSmartComponent from "./abstract-smart-component.js";
 import flatpickr from "flatpickr";
+// import {encode} from "he";
 import "flatpickr/dist/flatpickr.min.css";
 
 const createAdditionalOfferMarkup = (offer, isChecked) => {
@@ -202,6 +203,15 @@ export default class EventEditItem extends AbstractSmartComponent {
 
   getTemplate() {
     return createEventEditItemTemplate(this._card, this._type, this._offers);
+  }
+
+  removeElement() {
+    if (this._flatpickr) {
+      this._flatpickr.destroy();
+      this._flatpickr = null;
+    }
+
+    super.removeElement();
   }
 
   recoveryListeners() {
