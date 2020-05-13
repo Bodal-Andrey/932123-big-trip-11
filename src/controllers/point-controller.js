@@ -41,10 +41,6 @@ export default class PointController {
     this._eventItem = new EventItem(event);
     this._eventEditItem = new EventEditItem(event);
 
-    const tripEventsList = this._container.getElement().querySelector(`.trip-events__list`);
-
-    renderElement(tripEventsList, this._eventItem);
-
     this._eventEditItem.setFavoriteHandler(() => {
       this._onDataChange(this, event, Object.assign({}, event, {
         isFavorite: !event.isFavorite,
@@ -81,7 +77,7 @@ export default class PointController {
           replace(this._eventEditItem, oldEventEditItem);
           this._eventEditItemToEventItem();
         } else {
-          renderElement(tripEventsList, this._eventItem);
+          renderElement(this._container.getElement().querySelector(`.trip-events__list`), this._eventItem);
         }
         break;
       case Mode.ADDING:

@@ -51,7 +51,8 @@ const createEventEditItemTemplate = (card, type) => {
   const favorite = createFavoriteMarkup(`favorite`, !card.isFavorite);
 
   return (
-    `<form class="event  event--edit" action="#" method="post">
+    `<li class="trip-events__item">
+      <form class="trip-events__item event  event--edit" action="#" method="post">
       <header class="event__header">
         <div class="event__type-wrapper">
           <label class="event__type  event__type-btn" for="event-type-toggle-1">
@@ -180,7 +181,8 @@ const createEventEditItemTemplate = (card, type) => {
           </div>
         </section>
       </section>
-    </form>`
+    </form>
+    </li>`
   );
 };
 
@@ -272,7 +274,7 @@ export default class EventEditItem extends AbstractSmartComponent {
   }
 
   setSubmitHandler(handler) {
-    this.getElement().querySelector(`.event__save-btn`).addEventListener(`submit`, handler);
+    this.getElement().addEventListener(`submit`, handler);
     this._submitHandler = handler;
   }
 
