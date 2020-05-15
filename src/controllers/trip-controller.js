@@ -6,7 +6,7 @@ import NoTripItem from "../components/no-trip-item.js";
 import {cards} from "../mock/cards.js";
 import {SortType} from "../const.js";
 import {renderElement} from "../utils/render.js";
-import PointController, {Mode as PointControllerMode, EmptyEvent} from "./point-controller.js";
+import PointController, {Mode, EmptyEvent} from "./point-controller.js";
 
 const renderEvents = (events, tripDay, onDataChange, onViewChange, isDefaultSorting = true) => {
   const dates = isDefaultSorting ? [...new Set(events.map((item) => new Date(item.startDate).toDateString()))] : [true];
@@ -20,7 +20,7 @@ const renderEvents = (events, tripDay, onDataChange, onViewChange, isDefaultSort
       return isDefaultSorting ? new Date(_card.startDate).toDateString() === date : _card;
     }).forEach((_card) => {
       const pointController = new PointController(day, onDataChange, onViewChange);
-      pointController.renderPoint(_card, PointControllerMode.DEFAULT);
+      pointController.renderPoint(_card, Mode.DEFAULT);
       pointControllers.push(pointController);
     });
 
@@ -69,7 +69,7 @@ export default class TripController {
     }
 
     this._creatingEvent = new PointController(this._daysComponent.getElement(), this._onDataChange, this._onViewChange);
-    this._creatingEvent.renderPoint(EmptyEvent, PointControllerMode.ADDING);
+    this._creatingEvent.renderPoint(EmptyEvent, Mode.ADDING);
     this._onViewChange();
   }
 
@@ -126,7 +126,7 @@ export default class TripController {
         this._updateEvents();
       } else {
         this._eventsModel.addEvent(newData);
-        pointController.renderPoint(newData, PointControllerMode.DEFAULT);
+        pointController.renderPoint(newData, Mode.DEFAULT);
         this._showedEventControllers = [].concat(pointController, this._showedEventControllers);
       }
     } else if (newData === null) {
@@ -136,7 +136,7 @@ export default class TripController {
       const isSuccess = this._eventsModel.updateEvent(oldData.id, newData);
 
       if (isSuccess) {
-        pointController.renderPoint(newData, PointControllerMode.DEFAULT);
+        pointController.renderPoint(newData, Mode.DEFAULT);
       }
     }
   }

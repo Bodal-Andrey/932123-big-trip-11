@@ -63,6 +63,7 @@ const generateCard = () => {
     offers: getRandomArray(generateOfferNames(), 0, 5),
     photos: getRandomArray(generatePhotos(), 1, 5),
     isFavorite: false,
+    isNew: false,
   };
 };
 
@@ -72,4 +73,4 @@ const generateCards = (amount) => {
 
 const cards = generateCards(CARDS_AMOUNT);
 
-export {cards};
+export {cards, generateCard};

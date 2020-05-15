@@ -1,6 +1,7 @@
 import EventEditItem from "../components/event-edit-item.js";
 import EventItem from "../components/event-item.js";
 import {renderElement, replace, remove} from "../utils/render.js";
+import {generateCard} from "../mock/cards.js";
 
 export const Mode = {
   ADDING: `adding`,
@@ -9,16 +10,18 @@ export const Mode = {
 };
 
 export const EmptyEvent = {
-  type: [],
-  city: [],
+  id: generateCard().id,
+  type: generateCard().type,
+  city: ``,
   startDate: Date.now(),
   endDate: Date.now(),
   nowDate: new Date(),
   price: ``,
-  description: [],
+  description: ``,
   offers: [],
   photos: [],
   isFavorite: false,
+  isNew: true,
 };
 
 export default class PointController {
@@ -65,8 +68,8 @@ export default class PointController {
       document.removeEventListener(`keydown`, this._onEscKeyDown);
     });
 
-    this._eventEditItem.setCancelHandler(() => {
-      this._eventEditItemToEventItem();
+    this._eventEditItem.setDeleteHandler(() => {
+      this._onDataChange(this, event, null);
       document.removeEventListener(`keydown`, this._onEscKeyDown);
     });
 
@@ -87,6 +90,9 @@ export default class PointController {
         }
         document.addEventListener(`keydown`, this._onEscKeyDown);
         renderElement(this._container, this._eventEditItem, `afterbegin`);
+        if (document.contains(this._eventEditItem.getElement())) {
+          this._eventEditItem.removeElement();
+        }
         break;
     }
   }

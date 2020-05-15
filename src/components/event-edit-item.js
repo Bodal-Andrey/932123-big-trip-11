@@ -31,10 +31,10 @@ const createPhotosMarkup = (photo) => {
   );
 };
 
-const createFavoriteMarkup = (name, isChecked = false) => {
+const createFavoriteMarkup = (name, isChecked = false, isNew = false) => {
   return (
     `<input id="event-${name}-1" class="event__${name}-checkbox  visually-hidden" type="checkbox" name="event-${name}" ${isChecked ? `checked` : ``}>
-    <label class="event__${name}-btn" for="event-${name}-1">
+    <label class="event__${name}-btn ${isNew ? `` : `visually-hidden`}" for="event-${name}-1">
       <span class="visually-hidden">Add to ${name}</span>
       <svg class="event__${name}-icon" width="28" height="28" viewBox="0 0 28 28">
         <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
@@ -44,11 +44,11 @@ const createFavoriteMarkup = (name, isChecked = false) => {
 };
 
 const createEventEditItemTemplate = (card, type) => {
-  const {city, startDate, endDate, price, description, photos, offers} = card;
+  const {city, startDate, endDate, price, description, photos, offers, isNew} = card;
 
   const additionalOfferMarkup = offers.map((it, i) => createAdditionalOfferMarkup(it, i === 0)).join(`\n`);
   const photosMarkup = photos.map((it) => createPhotosMarkup(it)).join(`\n`);
-  const favorite = createFavoriteMarkup(`favorite`, !card.isFavorite);
+  const favorite = createFavoriteMarkup(`favorite`, !card.isFavorite, !card.isNew);
 
   return (
     `<li class="trip-events__item">
@@ -151,13 +151,13 @@ const createEventEditItemTemplate = (card, type) => {
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
+          <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${price}">
         </div>
   
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-        <button class="event__reset-btn" type="reset">Cancel</button>
+        <button class="event__reset-btn" type="reset">${isNew === false ? `Delete` : `Cancel`}</button>
         ${favorite}
-        <button class="event__rollup-btn" type="button">
+        <button class="event__rollup-btn" ${isNew === false ? `` : `style="display: none"`} type="button">
           <span class="visually-hidden">Open event</span>
         </button>
       </header>
@@ -193,7 +193,8 @@ export default class EventEditItem extends AbstractSmartComponent {
     this._type = card.type;
     this._submitHandler = null;
     this._displaceHandler = null;
-    this._cancelHandler = null;
+    this._deleteHandler = null;
+    this._favoriteHandler = null;
     this._flatpickrStart = null;
     this._flatpickrEnd = null;
 
@@ -218,8 +219,9 @@ export default class EventEditItem extends AbstractSmartComponent {
 
   recoveryListeners() {
     this.setSubmitHandler(this._submitHandler);
+    this.setFavoriteHandler(this._favoriteHandler);
     this.setDisplaceHandler(this._displaceHandler);
-    this.setCancelHandler(this._cancelHandler);
+    this.setDeleteHandler(this._deleteHandler);
     this._subscribeToChange();
   }
 
@@ -271,6 +273,7 @@ export default class EventEditItem extends AbstractSmartComponent {
 
   setFavoriteHandler(handler) {
     this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, handler);
+    this._favoriteHandler = handler;
   }
 
   setSubmitHandler(handler) {
@@ -283,8 +286,8 @@ export default class EventEditItem extends AbstractSmartComponent {
     this._displaceHandler = handler;
   }
 
-  setCancelHandler(handler) {
+  setDeleteHandler(handler) {
     this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, handler);
-    this._cancelHandler = handler;
+    this._deleteHandler = handler;
   }
 }
