@@ -186,6 +186,12 @@ const createEventEditItemTemplate = (card, type) => {
   );
 };
 
+const parseFormData = (formData) => {
+  return {
+    description: formData.get(`text`),
+  };
+};
+
 export default class EventEditItem extends AbstractSmartComponent {
   constructor(card) {
     super();
@@ -269,6 +275,12 @@ export default class EventEditItem extends AbstractSmartComponent {
   reset() {
     this._type = this._card.type;
     this.rerender();
+  }
+
+  getData() {
+    const form = this.getElement().querySelector(`.event--edit`);
+    const formData = new FormData(form);
+    return parseFormData(formData);
   }
 
   setFavoriteHandler(handler) {
