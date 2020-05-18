@@ -189,6 +189,7 @@ const createEventEditItemTemplate = (card, type) => {
 const parseFormData = (formData) => {
   return {
     description: formData.get(`text`),
+    offers: formData.get(`text`),
   };
 };
 

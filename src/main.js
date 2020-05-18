@@ -32,7 +32,9 @@ document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, ()
   tripController.createEvent();
 });
 
-Menu.setOnChange((menuItem) => {
+const menuComponent = new Menu();
+
+menuComponent.setOnChange((menuItem) => {
   switch (menuItem) {
     case MenuItem.STATS:
       Menu.setActiveItem(MenuItem.STATS);
