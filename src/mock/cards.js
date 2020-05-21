@@ -26,7 +26,7 @@ const getRandomArray = (arr, min, max) => {
 const generateOfferNames = () => {
   return offerNames.map((it) => {
     return {
-      data: it,
+      name: it,
       price: Math.floor(Math.random() * 100),
     };
   });
@@ -52,15 +52,18 @@ const generateCard = () => {
   const endDate = getRandomDate();
 
   return {
+    id: String(new Date() + Math.random()),
     type: types[getRandomInteger(0, types.length - 1)],
     city: cities[getRandomInteger(0, cities.length - 1)],
     startDate: Math.min(startDate, endDate),
     endDate: Math.max(startDate, endDate),
+    nowDate: new Date(),
     price: getRandomInteger(10, 100),
     description: getRandomArray(arrayOfSentence, 1, 5).join(`. `),
     offers: getRandomArray(generateOfferNames(), 0, 5),
     photos: getRandomArray(generatePhotos(), 1, 5),
     isFavorite: false,
+    isNew: false,
   };
 };
 
@@ -70,4 +73,4 @@ const generateCards = (amount) => {
 
 const cards = generateCards(CARDS_AMOUNT);
 
-export {cards};
+export {cards, generateCard};

@@ -1,11 +1,11 @@
 import AbstractSmartComponent from "./abstract-smart-component.js";
 import flatpickr from "flatpickr";
+import moment from "moment";
+// import {encode} from "he";
 import "flatpickr/dist/flatpickr.min.css";
 
 const createAdditionalOfferMarkup = (offer, isChecked) => {
-  const {data, price} = offer;
-  const name = data.toLowerCase();
-
+  const {name, price} = offer;
   return (
     `<div class="event__offer-selector">
     <input 
@@ -16,7 +16,7 @@ const createAdditionalOfferMarkup = (offer, isChecked) => {
     ${isChecked ? `checked` : ``}
     >
     <label class="event__offer-label" for="event-offer-${name}-1">
-      <span class="event__offer-title">${data}</span>
+      <span class="event__offer-title">${name}</span>
       &plus;
       &euro;&nbsp;<span class="event__offer-price">${price}</span>
     </label>
@@ -30,10 +30,10 @@ const createPhotosMarkup = (photo) => {
   );
 };
 
-const createFavoriteMarkup = (name, isChecked = false) => {
+const createFavoriteMarkup = (name, isChecked = false, isNew = false) => {
   return (
     `<input id="event-${name}-1" class="event__${name}-checkbox  visually-hidden" type="checkbox" name="event-${name}" ${isChecked ? `checked` : ``}>
-    <label class="event__${name}-btn" for="event-${name}-1">
+    <label class="event__${name}-btn ${isNew ? `` : `visually-hidden`}" for="event-${name}-1">
       <span class="visually-hidden">Add to ${name}</span>
       <svg class="event__${name}-icon" width="28" height="28" viewBox="0 0 28 28">
         <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
@@ -43,14 +43,15 @@ const createFavoriteMarkup = (name, isChecked = false) => {
 };
 
 const createEventEditItemTemplate = (card, type) => {
-  const {city, startDate, endDate, price, description, photos, offers} = card;
+  const {city, startDate, endDate, price, description, photos, offers, isNew} = card;
 
-  const additionalOfferMarkup = offers.map((it, i) => createAdditionalOfferMarkup(it, i === 0)).join(`\n`);
+  const additionalOfferMarkup = offers.length > 0 ? offers.map((it, i) => createAdditionalOfferMarkup(it, i === 0)).join(`\n`) : ``;
   const photosMarkup = photos.map((it) => createPhotosMarkup(it)).join(`\n`);
-  const favorite = createFavoriteMarkup(`favorite`, !card.isFavorite);
+  const favorite = createFavoriteMarkup(`favorite`, !card.isFavorite, !card.isNew);
 
   return (
-    `<form class="event  event--edit" action="#" method="post">
+    `<li class="trip-events__item">
+      <form class="trip-events__item event  event--edit" action="#" method="post">
       <header class="event__header">
         <div class="event__type-wrapper">
           <label class="event__type  event__type-btn" for="event-type-toggle-1">
@@ -149,26 +150,27 @@ const createEventEditItemTemplate = (card, type) => {
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
+          <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${price}">
         </div>
   
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-        <button class="event__reset-btn" type="reset">Cancel</button>
+        <button class="event__reset-btn" type="reset">${!isNew ? `Delete` : `Cancel`}</button>
         ${favorite}
-        <button class="event__rollup-btn" type="button">
+        <button class="event__rollup-btn" ${!isNew ? `` : `style="display: none"`} type="button">
           <span class="visually-hidden">Open event</span>
         </button>
       </header>
+      ${offers.length === 0 && description === `` ? `` : `
       <section class="event__details">
-        <section class="event__section  event__section--offers">
+        ${offers.length !== 0 ? `<section class="event__section  event__section--offers">
           <h3 class="event__section-title  event__section-title--offers">Offers</h3>
   
           <div class="event__available-offers">
             ${additionalOfferMarkup}
           </div>
-        </section>
+        </section>` : ``}
   
-        <section class="event__section  event__section--destination">
+        ${description !== `` ? `<section class="event__section  event__section--destination">
           <h3 class="event__section-title  event__section-title--destination">Destination</h3>
           <p class="event__destination-description">${description}.</p>
   
@@ -177,10 +179,32 @@ const createEventEditItemTemplate = (card, type) => {
               ${photosMarkup}
             </div>
           </div>
-        </section>
-      </section>
-    </form>`
+        </section>` : ``}
+      </section>`}
+    </form>
+    </li>`
   );
+};
+
+const parseFormData = (formData, offers, photos, description, id) => {
+  return {
+    type: formData.get(`event-type`),
+    city: formData.get(`event-destination`),
+    startDate: moment(formData.get(`event-start-time`), `DD/MM/YY HH:mm`).valueOf(),
+    endDate: moment(formData.get(`event-end-time`), `DD/MM/YY HH:mm`).valueOf(),
+    offers: offers.map((offer) => {
+      return {
+        name: offer.name,
+        price: offer.price,
+        checked: formData.get(`event-offer-${offer.type}`) === `on` ? true : false
+      };
+    }),
+    photos,
+    description,
+    price: Number(formData.get(`event-price`)),
+    id,
+    isFavorite: formData.get(`event-favorite`) === `on`
+  };
 };
 
 export default class EventEditItem extends AbstractSmartComponent {
@@ -190,7 +214,8 @@ export default class EventEditItem extends AbstractSmartComponent {
     this._type = card.type;
     this._submitHandler = null;
     this._displaceHandler = null;
-    this._cancelHandler = null;
+    this._deleteHandler = null;
+    this._favoriteHandler = null;
     this._flatpickrStart = null;
     this._flatpickrEnd = null;
 
@@ -204,10 +229,20 @@ export default class EventEditItem extends AbstractSmartComponent {
     return createEventEditItemTemplate(this._card, this._type, this._offers);
   }
 
+  removeElement() {
+    if (this._flatpickr) {
+      this._flatpickr.destroy();
+      this._flatpickr = null;
+    }
+
+    super.removeElement();
+  }
+
   recoveryListeners() {
     this.setSubmitHandler(this._submitHandler);
+    this.setFavoriteHandler(this._favoriteHandler);
     this.setDisplaceHandler(this._displaceHandler);
-    this.setCancelHandler(this._cancelHandler);
+    this.setDeleteHandler(this._deleteHandler);
     this._subscribeToChange();
   }
 
@@ -226,11 +261,9 @@ export default class EventEditItem extends AbstractSmartComponent {
     }
 
     const options = {
-      altInput: true,
       allowInput: true,
       enableTime: true,
-      [`time_24hr`]: true,
-      altFormat: `d/m/Y H:i`,
+      dateFormat: `d/m/y H:i`,
     };
 
     const startDateElement = this.getElement().querySelector(`#event-start-time-1`);
@@ -257,12 +290,25 @@ export default class EventEditItem extends AbstractSmartComponent {
     this.rerender();
   }
 
+  getData() {
+    const form = this.getElement().querySelector(`.event--edit`);
+    const formData = new FormData(form);
+    return parseFormData(
+        formData,
+        this._card.offers,
+        this._card.photos,
+        this._card.description,
+        this._card.id
+    );
+  }
+
   setFavoriteHandler(handler) {
     this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, handler);
+    this._favoriteHandler = handler;
   }
 
   setSubmitHandler(handler) {
-    this.getElement().querySelector(`.event__save-btn`).addEventListener(`submit`, handler);
+    this.getElement().addEventListener(`submit`, handler);
     this._submitHandler = handler;
   }
 
@@ -271,8 +317,8 @@ export default class EventEditItem extends AbstractSmartComponent {
     this._displaceHandler = handler;
   }
 
-  setCancelHandler(handler) {
+  setDeleteHandler(handler) {
     this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, handler);
-    this._cancelHandler = handler;
+    this._deleteHandler = handler;
   }
 }
