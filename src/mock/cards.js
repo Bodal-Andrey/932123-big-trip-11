@@ -26,7 +26,7 @@ const getRandomArray = (arr, min, max) => {
 const generateOfferNames = () => {
   return offerNames.map((it) => {
     return {
-      data: it,
+      name: it,
       price: Math.floor(Math.random() * 100),
     };
   });

@@ -51,15 +51,12 @@ export default class PointController {
     });
 
     this._eventItem.setClickHandler(() => {
-      const tripEventsItem = this._container.getElement().querySelector(`.trip-events__item`);
-      renderElement(tripEventsItem, this._eventEditItem);
       this._eventItemToEventEditItem();
       document.addEventListener(`keydown`, this._onEscKeyDown);
     });
 
     this._eventEditItem.setSubmitHandler((evt) => {
       evt.preventDefault();
-      // this._eventEditItemToEventItem();
       const data = this._eventEditItem.getData();
       this._onDataChange(this, event, data);
       document.removeEventListener(`keydown`, this._onEscKeyDown);
@@ -92,9 +89,6 @@ export default class PointController {
         }
         document.addEventListener(`keydown`, this._onEscKeyDown);
         renderElement(this._container, this._eventEditItem, `afterbegin`);
-        if (document.contains(this._eventEditItem.getElement())) {
-          this._eventEditItem.removeElement();
-        }
         break;
     }
   }

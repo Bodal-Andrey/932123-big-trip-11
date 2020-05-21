@@ -126,8 +126,8 @@ export default class TripController {
         this._updateEvents();
       } else {
         this._eventsModel.addEvent(newData);
-        pointController.renderPoint(newData, Mode.DEFAULT);
-        this._showedEventControllers = [].concat(pointController, this._showedEventControllers);
+        this._removeEvents();
+        this._showedEventControllers = renderEvents(this._eventsModel.getEvents(), this._daysComponent, this._onDataChange, this._onViewChange);
       }
     } else if (newData === null) {
       this._eventsModel.removeEvent(oldData.id);

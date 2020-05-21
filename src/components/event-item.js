@@ -2,11 +2,11 @@ import AbstractComponent from "./abstract-component.js";
 import {formatTime, timeDifference} from "../utils/common.js";
 
 const createOfferMarkup = (offer) => {
-  const {data, price} = offer;
+  const {name, price} = offer;
 
   return (
     `<li class="event__offer">
-    <span class="event__offer-title">${data}</span>
+    <span class="event__offer-title">${name}</span>
     &plus;
     &euro;&nbsp;<span class="event__offer-price">${price}</span>
   </li>`

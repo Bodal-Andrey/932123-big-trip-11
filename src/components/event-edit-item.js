@@ -1,12 +1,11 @@
 import AbstractSmartComponent from "./abstract-smart-component.js";
 import flatpickr from "flatpickr";
+import moment from "moment";
 // import {encode} from "he";
 import "flatpickr/dist/flatpickr.min.css";
 
 const createAdditionalOfferMarkup = (offer, isChecked) => {
-  const {data, price} = offer;
-  const name = data.toLowerCase();
-
+  const {name, price} = offer;
   return (
     `<div class="event__offer-selector">
     <input 
@@ -17,7 +16,7 @@ const createAdditionalOfferMarkup = (offer, isChecked) => {
     ${isChecked ? `checked` : ``}
     >
     <label class="event__offer-label" for="event-offer-${name}-1">
-      <span class="event__offer-title">${data}</span>
+      <span class="event__offer-title">${name}</span>
       &plus;
       &euro;&nbsp;<span class="event__offer-price">${price}</span>
     </label>
@@ -46,7 +45,7 @@ const createFavoriteMarkup = (name, isChecked = false, isNew = false) => {
 const createEventEditItemTemplate = (card, type) => {
   const {city, startDate, endDate, price, description, photos, offers, isNew} = card;
 
-  const additionalOfferMarkup = offers.map((it, i) => createAdditionalOfferMarkup(it, i === 0)).join(`\n`);
+  const additionalOfferMarkup = offers.length > 0 ? offers.map((it, i) => createAdditionalOfferMarkup(it, i === 0)).join(`\n`) : ``;
   const photosMarkup = photos.map((it) => createPhotosMarkup(it)).join(`\n`);
   const favorite = createFavoriteMarkup(`favorite`, !card.isFavorite, !card.isNew);
 
@@ -155,22 +154,23 @@ const createEventEditItemTemplate = (card, type) => {
         </div>
   
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-        <button class="event__reset-btn" type="reset">${isNew === false ? `Delete` : `Cancel`}</button>
+        <button class="event__reset-btn" type="reset">${!isNew ? `Delete` : `Cancel`}</button>
         ${favorite}
-        <button class="event__rollup-btn" ${isNew === false ? `` : `style="display: none"`} type="button">
+        <button class="event__rollup-btn" ${!isNew ? `` : `style="display: none"`} type="button">
           <span class="visually-hidden">Open event</span>
         </button>
       </header>
+      ${offers.length === 0 && description === `` ? `` : `
       <section class="event__details">
-        <section class="event__section  event__section--offers">
+        ${offers.length !== 0 ? `<section class="event__section  event__section--offers">
           <h3 class="event__section-title  event__section-title--offers">Offers</h3>
   
           <div class="event__available-offers">
             ${additionalOfferMarkup}
           </div>
-        </section>
+        </section>` : ``}
   
-        <section class="event__section  event__section--destination">
+        ${description !== `` ? `<section class="event__section  event__section--destination">
           <h3 class="event__section-title  event__section-title--destination">Destination</h3>
           <p class="event__destination-description">${description}.</p>
   
@@ -179,17 +179,31 @@ const createEventEditItemTemplate = (card, type) => {
               ${photosMarkup}
             </div>
           </div>
-        </section>
-      </section>
+        </section>` : ``}
+      </section>`}
     </form>
     </li>`
   );
 };
 
-const parseFormData = (formData) => {
+const parseFormData = (formData, offers, photos, description, id) => {
   return {
-    description: formData.get(`text`),
-    offers: formData.get(`text`),
+    type: formData.get(`event-type`),
+    city: formData.get(`event-destination`),
+    startDate: moment(formData.get(`event-start-time`), `DD/MM/YY HH:mm`).valueOf(),
+    endDate: moment(formData.get(`event-end-time`), `DD/MM/YY HH:mm`).valueOf(),
+    offers: offers.map((offer) => {
+      return {
+        name: offer.name,
+        price: offer.price,
+        checked: formData.get(`event-offer-${offer.type}`) === `on` ? true : false
+      };
+    }),
+    photos,
+    description,
+    price: Number(formData.get(`event-price`)),
+    id,
+    isFavorite: formData.get(`event-favorite`) === `on`
   };
 };
 
@@ -247,11 +261,9 @@ export default class EventEditItem extends AbstractSmartComponent {
     }
 
     const options = {
-      altInput: true,
       allowInput: true,
       enableTime: true,
-      [`time_24hr`]: true,
-      altFormat: `d/m/Y H:i`,
+      dateFormat: `d/m/y H:i`,
     };
 
     const startDateElement = this.getElement().querySelector(`#event-start-time-1`);
@@ -281,7 +293,13 @@ export default class EventEditItem extends AbstractSmartComponent {
   getData() {
     const form = this.getElement().querySelector(`.event--edit`);
     const formData = new FormData(form);
-    return parseFormData(formData);
+    return parseFormData(
+        formData,
+        this._card.offers,
+        this._card.photos,
+        this._card.description,
+        this._card.id
+    );
   }
 
   setFavoriteHandler(handler) {
