@@ -5,6 +5,7 @@ import FilterController from "./controllers/filter-controller.js";
 import EventsModel from "./models/events.js";
 import {cards} from "./mock/cards.js";
 import {renderElement} from "./utils/render.js";
+import Statistics from "./components/statistics.js";
 import TripController from "./controllers/trip-controller.js";
 
 const siteTripMainElement = document.querySelector(`.trip-main`);
@@ -34,10 +35,20 @@ document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, ()
 
 const menuComponent = new Menu();
 
+const statisticsComponent = new Statistics();
+renderElement(siteTripMainElement, statisticsComponent, `beforeend`);
+statisticsComponent.hide();
+
 menuComponent.setOnChange((menuItem) => {
   switch (menuItem) {
     case MenuItem.STATS:
-      Menu.setActiveItem(MenuItem.STATS);
+      menuComponent.setActiveItem(MenuItem.STATS);
+      tripController.hide();
+      statisticsComponent.show();
       break;
+    case MenuItem.TABLE:
+      menuComponent.setActiveItem(MenuItem.TABLE);
+      statisticsComponent.hide();
+      tripController.show();
   }
 });

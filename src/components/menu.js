@@ -23,6 +23,7 @@ export default class Menu extends AbstractComponent {
     const item = this.getElement().querySelector(`#${menuItem}`);
 
     if (item) {
+      document.querySelector(`.trip-tabs__btn`).classList.remove(`trip-tabs__btn--active`);
       item.classList.add(`trip-tabs__btn--active`);
     }
   }
