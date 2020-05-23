@@ -5,9 +5,11 @@ export default class Events {
   constructor() {
     this._events = [];
     this._activeFilterType = FilterType.EVERYTHING;
+    this._isCreatingMode = false;
 
     this._dataChangeHandlers = [];
     this._filterChangeHandlers = [];
+    this._modeChangeHandlers = [];
   }
 
   getEvents() {
@@ -26,6 +28,19 @@ export default class Events {
   setFilter(filterType) {
     this._activeFilterType = filterType;
     this._callHandlers(this._filterChangeHandlers);
+  }
+
+  getFilter() {
+    return this._activeFilterType;
+  }
+
+  getIsCreatingMode() {
+    return this._isCreatingMode;
+  }
+
+  setIsCreatingMode(mode = false) {
+    this._isCreatingMode = mode;
+    this._callHandlers(this._modeChangeHandlers);
   }
 
   removeEvent(id) {
@@ -59,6 +74,10 @@ export default class Events {
   addEvent(event) {
     this._events = [].concat(event, this._events);
     this._callHandlers(this._dataChangeHandlers);
+  }
+
+  setModeChangeHandler(handler) {
+    this._modeChangeHandlers.push(handler);
   }
 
   setFilterChangeHandler(handler) {

@@ -3,6 +3,7 @@ import Cost from "./components/cost.js";
 import Menu from "./components/menu.js";
 import FilterController from "./controllers/filter-controller.js";
 import EventsModel from "./models/events.js";
+import EventsBoard from "./components/events-board.js";
 import {cards} from "./mock/cards.js";
 import {renderElement} from "./utils/render.js";
 import Statistics from "./components/statistics.js";
@@ -11,7 +12,7 @@ import {MenuItem} from "./const.js";
 
 const siteTripMainElement = document.querySelector(`.trip-main`);
 const siteTripControlsElement = document.querySelector(`.trip-controls`);
-const siteTripEventsElement = document.querySelector(`.trip-events`);
+const pageBodyContainer = document.querySelector(`main .page-body__container`);
 
 const menuComponent = new Menu();
 renderElement(siteTripControlsElement, menuComponent, `afterbegin`);
@@ -28,15 +29,18 @@ const siteTripInfoElement = siteTripMainElement.querySelector(`.trip-info`);
 
 renderElement(siteTripInfoElement, new Cost(cards), `beforeend`);
 
-const tripController = new TripController(siteTripEventsElement, eventsModel);
+const eventsBoard = new EventsBoard();
+renderElement(pageBodyContainer, eventsBoard, `afterbegin`);
+
+const tripController = new TripController(eventsBoard, eventsModel);
 tripController.render();
 
 document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, () => {
   tripController.createEvent();
 });
 
-const statisticsComponent = new Statistics(eventsModel.getAllEvents());
-renderElement(siteTripMainElement, statisticsComponent, `beforeend`);
+const statisticsComponent = new Statistics(eventsModel);
+renderElement(pageBodyContainer, statisticsComponent, `beforeend`);
 statisticsComponent.hide();
 
 menuComponent.setOnChange((menuItem) => {

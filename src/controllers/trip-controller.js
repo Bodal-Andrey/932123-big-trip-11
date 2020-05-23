@@ -31,7 +31,8 @@ const renderEvents = (events, tripDay, onDataChange, onViewChange, isDefaultSort
 
 export default class TripController {
   constructor(container, eventsModel) {
-    this._container = container;
+    this._containerComponent = container;
+    this._container = this._containerComponent.getElement();
     this._eventsModel = eventsModel;
     this._showedEventControllers = [];
     this._sortComponent = new Sort();
@@ -51,12 +52,12 @@ export default class TripController {
   }
 
   hide() {
-    this._container.hide();
+    this._containerComponent.hide();
     this._setDefaultBoardMode();
   }
 
   show() {
-    this._container.show();
+    this._containerComponent.show();
     this._sortComponent.rerender();
     this.render();
   }
@@ -132,10 +133,6 @@ export default class TripController {
   }
 
   _onFilterChange() {
-    this._updateEvents();
-  }
-
-  _filterTypeChangeHandler() {
     this._sortType = SortType.EVERYTHING;
     this._sortComponent.rerender();
     this.render();

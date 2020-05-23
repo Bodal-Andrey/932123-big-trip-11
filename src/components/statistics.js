@@ -26,28 +26,48 @@ const createStatisticsTemplate = () => {
 };
 
 export default class Statistics extends AbstractSmartComponent {
-  constructor(cards) {
+  constructor(eventsModel) {
     super();
+    this._eventsModel = eventsModel;
 
-    this._cards = cards;
-    this.renderCharts();
+    this._moneyChart = null;
+    this._transportChart = null;
+    this._timeSpendChart = null;
   }
 
   getTemplate() {
     return createStatisticsTemplate();
   }
 
-  renderCharts() {
+  show() {
+    super.show();
+
+    this._renderCharts();
+  }
+
+  hide() {
+    super.hide();
+
+    this._destroyCharts();
+  }
+
+  _renderCharts() {
+    const moneyCtx = this.getElement().querySelector(`.statistics__chart--money`);
+    const transportCtx = this.getElement().querySelector(`.statistics__chart--transport`);
+    const timeSpendCtx = this.getElement().querySelector(`.statistics__chart--time`);
+
+    this._events = this._eventsModel.getEvents();
+
     this._tripEventsTypes = this._getTripEventsTypes();
     this._tripEventsChartData = this._getTripEventsChartData();
     this._transportEvents = this._getTransportEventsCounts();
 
-    this._moneyChart = this._renderMoneyChart();
-    this._transportChart = this._renderTransportChart();
-    this._timeSpendChart = this._renderTimeSpendChart();
+    this._moneyChart = this._renderMoneyChart(moneyCtx);
+    this._transportChart = this._renderTransportChart(transportCtx);
+    this._timeSpendChart = this._renderTimeSpendChart(timeSpendCtx);
   }
 
-  destroyCharts() {
+  _destroyCharts() {
     if (this._moneyChart) {
       this._moneyChart.destroy();
       this._moneyChart = null;
@@ -64,80 +84,10 @@ export default class Statistics extends AbstractSmartComponent {
     }
   }
 
-  _filterTripEventTypes(tripEventType) {
-    const tripEventTypes = this._cards.filter((card) => tripEventType === card.type);
-    return tripEventTypes;
-  }
-
-  _getTripEventsChartData() {
-    const tripEventsChartData = this._tripEventsTypes.map((card) => {
-      return {
-        type: card,
-        label: ChartTypeLabelsMap[card],
-        money: this._getMoneyValues(card),
-        timeSpend: this._getTimeSpend(card),
-      };
-    });
-
-    return tripEventsChartData;
-  }
-
-  _getTripEventsTypes() {
-    let tripEventChartData = [];
-
-    this._cards.forEach((card) => {
-      if (tripEventChartData.indexOf(card.type) === -1) {
-        tripEventChartData.push(card.type);
-      }
-    });
-
-    return tripEventChartData;
-  }
-
-  _getMoneyValues(tripEventType) {
-    const allTripEventsTypes = this._filterTripEventTypes(tripEventType);
-    return allTripEventsTypes.reduce((totalValue, card) => totalValue + card.price, 0);
-  }
-
-  _getTimeSpend(tripEventType) {
-    const allTripEventsTypes = this._filterTripEventTypes(tripEventType);
-    const totalDifference = allTripEventsTypes.reduce((totalTimeDifference, card) => {
-      return totalTimeDifference + (card.endDate - card.startDate);
-    }, 0);
-    let differenceInHours = Math.round(totalDifference / TimeInMs.HOUR);
-
-    return differenceInHours;
-  }
-
-  _getTransportEvents() {
-    const transportEvents = [];
-    TRANSPORT_TYPE.forEach((type) => {
-      this._cards.forEach((card) => {
-        if (card.type === type) {
-          transportEvents.push(card.type);
-        }
-      });
-    });
-
-    return transportEvents;
-  }
-
-  _getTransportEventsCounts() {
-    const transportEvents = this._getTransportEvents();
-
-    const transportEventCounts = transportEvents.reduce((count, card) => {
-      count[card] = (count[card] || 0) + 1;
-      return count;
-    }, {});
-
-    return transportEventCounts;
-  }
-
-  _renderMoneyChart() {
-    const moneyCtx = this.getElement().querySelector(`.statistics__chart--money`);
+  _renderMoneyChart(moneyCtx) {
     moneyCtx.height = BAR_HEIGHT * this._tripEventsTypes.length;
 
-    this._moneyChart = new Chart(moneyCtx, {
+    return new Chart(moneyCtx, {
       plugins: [ChartDataLabels],
       type: `horizontalBar`,
       data: {
@@ -208,11 +158,10 @@ export default class Statistics extends AbstractSmartComponent {
     });
   }
 
-  _renderTransportChart() {
-    const transportCtx = this.getElement().querySelector(`.statistics__chart--transport`);
+  _renderTransportChart(transportCtx) {
     transportCtx.height = BAR_HEIGHT * this._tripEventsTypes.length;
 
-    this._transportChart = new Chart(transportCtx, {
+    return new Chart(transportCtx, {
       plugins: [ChartDataLabels],
       type: `horizontalBar`,
       data: {
@@ -283,11 +232,10 @@ export default class Statistics extends AbstractSmartComponent {
     });
   }
 
-  _renderTimeSpendChart() {
-    const timeSpendCtx = this.getElement().querySelector(`.statistics__chart--time`);
+  _renderTimeSpendChart(timeSpendCtx) {
     timeSpendCtx.height = BAR_HEIGHT * this._tripEventsTypes.length;
 
-    this._timeSpendChart = new Chart(timeSpendCtx, {
+    return new Chart(timeSpendCtx, {
       plugins: [ChartDataLabels],
       type: `horizontalBar`,
       data: {
@@ -356,5 +304,74 @@ export default class Statistics extends AbstractSmartComponent {
         }
       }
     });
+  }
+
+  _filterTripEventTypes(tripEventType) {
+    const tripEventTypes = this._events.filter((event) => tripEventType === event.type);
+    return tripEventTypes;
+  }
+
+  _getTripEventsChartData() {
+    const tripEventsChartData = this._tripEventsTypes.map((event) => {
+      return {
+        type: event,
+        label: ChartTypeLabelsMap[event],
+        money: this._getMoneyValues(event),
+        timeSpend: this._getTimeSpend(event),
+      };
+    });
+
+    return tripEventsChartData;
+  }
+
+  _getTripEventsTypes() {
+    let tripEventChartData = [];
+
+    this._events.forEach((event) => {
+      if (tripEventChartData.indexOf(event.type) === -1) {
+        tripEventChartData.push(event.type);
+      }
+    });
+
+    return tripEventChartData;
+  }
+
+  _getMoneyValues(tripEventType) {
+    const allTripEventsTypes = this._filterTripEventTypes(tripEventType);
+    return allTripEventsTypes.reduce((totalValue, event) => totalValue + event.price, 0);
+  }
+
+  _getTimeSpend(tripEventType) {
+    const allTripEventsTypes = this._filterTripEventTypes(tripEventType);
+    const totalDifference = allTripEventsTypes.reduce((totalTimeDifference, event) => {
+      return totalTimeDifference + (event.endDate - event.startDate);
+    }, 0);
+    let differenceInHours = Math.round(totalDifference / TimeInMs.HOUR);
+
+    return differenceInHours;
+  }
+
+  _getTransportEvents() {
+    const transportEvents = [];
+    TRANSPORT_TYPE.forEach((type) => {
+      this._events.forEach((event) => {
+        if (event.type === type) {
+          transportEvents.push(event.type);
+        }
+      });
+    });
+
+    return transportEvents;
+  }
+
+  _getTransportEventsCounts() {
+    const transportEvents = this._getTransportEvents();
+
+    const transportEventCounts = transportEvents.reduce((count, event) => {
+      count[event] = (count[event] || 0) + 1;
+      return count;
+    }, {});
+
+    return transportEventCounts;
   }
 }
