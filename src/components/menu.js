@@ -1,10 +1,5 @@
 import AbstractComponent from "./abstract-component.js";
 
-export const MenuItem = {
-  TABLE: `control__table`,
-  STATS: `control__stats`,
-};
-
 const createMenuTemplate = () => {
   return (
     `<nav class="trip-controls__trip-tabs  trip-tabs">
@@ -20,16 +15,17 @@ export default class Menu extends AbstractComponent {
   }
 
   setActiveItem(menuItem) {
-    const item = this.getElement().querySelector(`#${menuItem}`);
+    const activeItem = this.getElement().querySelector(`.trip-tabs__btn--active`);
+    const checkedItem = this.getElement().querySelector(`#${menuItem}`);
 
-    if (item) {
-      document.querySelector(`.trip-tabs__btn`).classList.remove(`trip-tabs__btn--active`);
-      item.classList.add(`trip-tabs__btn--active`);
-    }
+    activeItem.classList.remove(`trip-tabs__btn--active`);
+    checkedItem.classList.add(`trip-tabs__btn--active`);
   }
 
   setOnChange(handler) {
-    this.getElement().addEventListener(`change`, (evt) => {
+    this.getElement().addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+
       if (evt.target.tagName !== `A`) {
         return;
       }

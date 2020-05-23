@@ -1,146 +1,9 @@
 import AbstractSmartComponent from "./abstract-smart-component.js";
+import {ChartTypeLabelsMap, TRANSPORT_TYPE, TimeInMs} from "../const.js";
 import Chart from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 
-const moneyCtx = document.querySelector(`.statistics__item--money`);
-const transportCtx = document.querySelector(`.statistics__item--transport`);
-const timeSpendCtx = document.querySelector(`.statistics__item--time-spend`);
-
-// Рассчитаем высоту канваса в зависимости от того, сколько данных в него будет передаваться
 const BAR_HEIGHT = 55;
-moneyCtx.height = BAR_HEIGHT * 6;
-transportCtx.height = BAR_HEIGHT * 4;
-timeSpendCtx.height = BAR_HEIGHT * 4;
-
-const renderMoneyChart = new Chart(moneyCtx, {
-  plugins: [ChartDataLabels],
-  type: `horizontalBar`,
-  data: {
-    labels: [`FLY`, `STAY`, `DRIVE`, `LOOK`, `RIDE`],
-    datasets: [{
-      data: [400, 300, 200, 160, 100],
-      backgroundColor: `#ffffff`,
-      hoverBackgroundColor: `#ffffff`,
-      anchor: `start`
-    }]
-  },
-  options: {
-    plugins: {
-      datalabels: {
-        font: {
-          size: 13
-        },
-        color: `#000000`,
-        anchor: `end`,
-        align: `start`,
-        formatter: (val) => `€ ${val}`
-      }
-    },
-    title: {
-      display: true,
-      text: `MONEY`,
-      fontColor: `#000000`,
-      fontSize: 23,
-      position: `left`
-    },
-    scales: {
-      yAxes: [{
-        ticks: {
-          fontColor: `#000000`,
-          padding: 5,
-          fontSize: 13,
-        },
-        gridLines: {
-          display: false,
-          drawBorder: false
-        },
-        barThickness: 44,
-      }],
-      xAxes: [{
-        ticks: {
-          display: false,
-          beginAtZero: true,
-        },
-        gridLines: {
-          display: false,
-          drawBorder: false
-        },
-        minBarLength: 50
-      }],
-    },
-    legend: {
-      display: false
-    },
-    tooltips: {
-      enabled: false,
-    }
-  }
-});
-
-const renderTransportChart = new Chart(transportCtx, {
-  plugins: [ChartDataLabels],
-  type: `horizontalBar`,
-  data: {
-    labels: [`FLY`, `DRIVE`, `RIDE`],
-    datasets: [{
-      data: [4, 2, 1],
-      backgroundColor: `#ffffff`,
-      hoverBackgroundColor: `#ffffff`,
-      anchor: `start`
-    }]
-  },
-  options: {
-    plugins: {
-      datalabels: {
-        font: {
-          size: 13
-        },
-        color: `#000000`,
-        anchor: `end`,
-        align: `start`,
-        formatter: (val) => `${val}x`
-      }
-    },
-    title: {
-      display: true,
-      text: `TRANSPORT`,
-      fontColor: `#000000`,
-      fontSize: 23,
-      position: `left`
-    },
-    scales: {
-      yAxes: [{
-        ticks: {
-          fontColor: `#000000`,
-          padding: 5,
-          fontSize: 13,
-        },
-        gridLines: {
-          display: false,
-          drawBorder: false
-        },
-        barThickness: 44,
-      }],
-      xAxes: [{
-        ticks: {
-          display: false,
-          beginAtZero: true,
-        },
-        gridLines: {
-          display: false,
-          drawBorder: false
-        },
-        minBarLength: 50
-      }],
-    },
-    legend: {
-      display: false
-    },
-    tooltips: {
-      enabled: false,
-    }
-  }
-});
 
 const createStatisticsTemplate = () => {
   return (
@@ -163,39 +26,28 @@ const createStatisticsTemplate = () => {
 };
 
 export default class Statistics extends AbstractSmartComponent {
-  constructor() {
+  constructor(cards) {
     super();
 
-    this._moneyChart = null;
-    this._transportChart = null;
-
-    this._renderCharts();
+    this._cards = cards;
+    this.renderCharts();
   }
 
   getTemplate() {
     return createStatisticsTemplate();
   }
 
-  show() {
-    super.show();
-    this.rerender();
+  renderCharts() {
+    this._tripEventsTypes = this._getTripEventsTypes();
+    this._tripEventsChartData = this._getTripEventsChartData();
+    this._transportEvents = this._getTransportEventsCounts();
+
+    this._moneyChart = this._renderMoneyChart();
+    this._transportChart = this._renderTransportChart();
+    this._timeSpendChart = this._renderTimeSpendChart();
   }
 
-  recoveryListeners() {}
-
-  rerender() {
-    super.rerender();
-    this._renderCharts();
-  }
-
-  _renderCharts() {
-    this._resetCharts();
-
-    this._moneyChart = renderMoneyChart;
-    this._transportChart = renderTransportChart;
-  }
-
-  _resetCharts() {
+  destroyCharts() {
     if (this._moneyChart) {
       this._moneyChart.destroy();
       this._moneyChart = null;
@@ -205,5 +57,304 @@ export default class Statistics extends AbstractSmartComponent {
       this._transportChart.destroy();
       this._transportChart = null;
     }
+
+    if (this._timeSpendChart) {
+      this._timeSpendChart.destroy();
+      this._timeSpendChart = null;
+    }
+  }
+
+  _filterTripEventTypes(tripEventType) {
+    const tripEventTypes = this._cards.filter((card) => tripEventType === card.type);
+    return tripEventTypes;
+  }
+
+  _getTripEventsChartData() {
+    const tripEventsChartData = this._tripEventsTypes.map((card) => {
+      return {
+        type: card,
+        label: ChartTypeLabelsMap[card],
+        money: this._getMoneyValues(card),
+        timeSpend: this._getTimeSpend(card),
+      };
+    });
+
+    return tripEventsChartData;
+  }
+
+  _getTripEventsTypes() {
+    let tripEventChartData = [];
+
+    this._cards.forEach((card) => {
+      if (tripEventChartData.indexOf(card.type) === -1) {
+        tripEventChartData.push(card.type);
+      }
+    });
+
+    return tripEventChartData;
+  }
+
+  _getMoneyValues(tripEventType) {
+    const allTripEventsTypes = this._filterTripEventTypes(tripEventType);
+    return allTripEventsTypes.reduce((totalValue, card) => totalValue + card.price, 0);
+  }
+
+  _getTimeSpend(tripEventType) {
+    const allTripEventsTypes = this._filterTripEventTypes(tripEventType);
+    const totalDifference = allTripEventsTypes.reduce((totalTimeDifference, card) => {
+      return totalTimeDifference + (card.endDate - card.startDate);
+    }, 0);
+    let differenceInHours = Math.round(totalDifference / TimeInMs.HOUR);
+
+    return differenceInHours;
+  }
+
+  _getTransportEvents() {
+    const transportEvents = [];
+    TRANSPORT_TYPE.forEach((type) => {
+      this._cards.forEach((card) => {
+        if (card.type === type) {
+          transportEvents.push(card.type);
+        }
+      });
+    });
+
+    return transportEvents;
+  }
+
+  _getTransportEventsCounts() {
+    const transportEvents = this._getTransportEvents();
+
+    const transportEventCounts = transportEvents.reduce((count, card) => {
+      count[card] = (count[card] || 0) + 1;
+      return count;
+    }, {});
+
+    return transportEventCounts;
+  }
+
+  _renderMoneyChart() {
+    const moneyCtx = this.getElement().querySelector(`.statistics__chart--money`);
+    moneyCtx.height = BAR_HEIGHT * this._tripEventsTypes.length;
+
+    this._moneyChart = new Chart(moneyCtx, {
+      plugins: [ChartDataLabels],
+      type: `horizontalBar`,
+      data: {
+        labels: this._tripEventsTypeLabels,
+        datasets: [{
+          data: this._tripEventsTypes.map((eventType) => this._getMoneyValues(eventType)),
+          backgroundColor: `#ffffff`,
+          hoverBackgroundColor: `#ffffff`,
+          anchor: `start`
+        }]
+      },
+      options: {
+        plugins: {
+          datalabels: {
+            font: {
+              size: 13
+            },
+            color: `#000000`,
+            anchor: `end`,
+            align: `start`,
+            formatter: (val) => `€ ${val}`
+          }
+        },
+        title: {
+          display: true,
+          text: `MONEY`,
+          fontColor: `#000000`,
+          fontSize: 23,
+          position: `left`,
+        },
+        layout: {
+          padding: {
+            left: 100
+          }
+        },
+        scales: {
+          yAxes: [{
+            ticks: {
+              fontColor: `#000000`,
+              padding: 5,
+              fontSize: 13,
+            },
+            gridLines: {
+              display: false,
+              drawBorder: false
+            },
+            barThickness: 44,
+          }],
+          xAxes: [{
+            ticks: {
+              display: false,
+              beginAtZero: true,
+            },
+            gridLines: {
+              display: false,
+              drawBorder: false
+            },
+            minBarLength: 50
+          }],
+        },
+        legend: {
+          display: false
+        },
+        tooltips: {
+          enabled: false,
+        }
+      }
+    });
+  }
+
+  _renderTransportChart() {
+    const transportCtx = this.getElement().querySelector(`.statistics__chart--transport`);
+    transportCtx.height = BAR_HEIGHT * this._tripEventsTypes.length;
+
+    this._transportChart = new Chart(transportCtx, {
+      plugins: [ChartDataLabels],
+      type: `horizontalBar`,
+      data: {
+        labels: this._tripEventsTypeLabels,
+        datasets: [{
+          data: [4, 2, 1],
+          backgroundColor: `#ffffff`,
+          hoverBackgroundColor: `#ffffff`,
+          anchor: `start`
+        }]
+      },
+      options: {
+        plugins: {
+          datalabels: {
+            font: {
+              size: 13
+            },
+            color: `#000000`,
+            anchor: `end`,
+            align: `start`,
+            formatter: (val) => `${val}x`
+          }
+        },
+        title: {
+          display: true,
+          text: `TRANSPORT`,
+          fontColor: `#000000`,
+          fontSize: 23,
+          position: `left`,
+        },
+        layout: {
+          padding: {
+            left: 100
+          }
+        },
+        scales: {
+          yAxes: [{
+            ticks: {
+              fontColor: `#000000`,
+              padding: 5,
+              fontSize: 13,
+            },
+            gridLines: {
+              display: false,
+              drawBorder: false
+            },
+            barThickness: 44,
+          }],
+          xAxes: [{
+            ticks: {
+              display: false,
+              beginAtZero: true,
+            },
+            gridLines: {
+              display: false,
+              drawBorder: false
+            },
+            minBarLength: 50
+          }],
+        },
+        legend: {
+          display: false
+        },
+        tooltips: {
+          enabled: false,
+        }
+      }
+    });
+  }
+
+  _renderTimeSpendChart() {
+    const timeSpendCtx = this.getElement().querySelector(`.statistics__chart--time`);
+    timeSpendCtx.height = BAR_HEIGHT * this._tripEventsTypes.length;
+
+    this._timeSpendChart = new Chart(timeSpendCtx, {
+      plugins: [ChartDataLabels],
+      type: `horizontalBar`,
+      data: {
+        labels: this._tripEventsTypeLabels,
+        datasets: [{
+          data: [],
+          backgroundColor: `#ffffff`,
+          hoverBackgroundColor: `#ffffff`,
+          anchor: `start`
+        }]
+      },
+      options: {
+        plugins: {
+          datalabels: {
+            font: {
+              size: 13
+            },
+            color: `#000000`,
+            anchor: `end`,
+            align: `start`,
+            formatter: (val) => `${val}x`
+          }
+        },
+        title: {
+          display: true,
+          text: `TIME-SPEND`,
+          fontColor: `#000000`,
+          fontSize: 23,
+          position: `left`,
+        },
+        layout: {
+          padding: {
+            left: 100
+          }
+        },
+        scales: {
+          yAxes: [{
+            ticks: {
+              fontColor: `#000000`,
+              padding: 5,
+              fontSize: 13,
+            },
+            gridLines: {
+              display: false,
+              drawBorder: false
+            },
+            barThickness: 44,
+          }],
+          xAxes: [{
+            ticks: {
+              display: false,
+              beginAtZero: true,
+            },
+            gridLines: {
+              display: false,
+              drawBorder: false
+            },
+            minBarLength: 50
+          }],
+        },
+        legend: {
+          display: false
+        },
+        tooltips: {
+          enabled: false,
+        }
+      }
+    });
   }
 }

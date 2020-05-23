@@ -9,3 +9,29 @@ export const FilterType = {
   FUTURE: `future`,
   PAST: `past`,
 };
+
+export const MenuItem = {
+  TABLE: `control__table`,
+  STATS: `control__stats`,
+};
+
+export const ChartTypeLabelsMap = {
+  'taxi': `🚕 TAXI`,
+  'bus': `🚌 BUS`,
+  'train': `🚂 TRAIN`,
+  'ship': `🛳 SHIP`,
+  'transport': `🚊 TRANSPORT`,
+  'drive': `🚗 DRIVE`,
+  'flight': `✈️ FLIGHT`,
+  'check-in': `🏨 CHECK-IN`,
+  'sightseeing': `🏛 SIGHTSEEING`,
+  'restaurant': `🍴 RESTAURANT`,
+};
+
+export const TimeInMs = {
+  DAY: 86400000,
+  HOUR: 3600000,
+  MINUTE: 60000,
+};
+
+export const TRANSPORT_TYPE = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`];

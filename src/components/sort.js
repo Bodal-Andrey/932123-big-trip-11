@@ -46,9 +46,17 @@ export default class Sort extends AbstractComponent {
     return createSortTemplate();
   }
 
-  getSortType() {
-    return this._currentSortType;
+  rerender() {
+    super.rerender();
   }
+
+  recoveryListeners() {
+    this.setSortTypeChangeHandler(this._sortTypeChangeHandler);
+  }
+
+  // getSortType() {
+  //   return this._currentSortType;
+  // }
 
   setSortTypeChangeHandler(handler) {
     this.getElement().addEventListener(`click`, (evt) => {
@@ -68,5 +76,6 @@ export default class Sort extends AbstractComponent {
 
       handler(this._currentSortType);
     });
+    this._sortTypeChangeHandler = handler;
   }
 }
