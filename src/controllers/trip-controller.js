@@ -133,7 +133,6 @@ export default class TripController {
   }
 
   _onFilterChange() {
-    this._sortType = SortType.EVERYTHING;
     this._sortComponent.rerender();
     this.render();
   }
