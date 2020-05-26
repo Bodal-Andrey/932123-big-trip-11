@@ -4,7 +4,7 @@ import Days from "../components/days.js";
 import EventItem from "../components/event-item.js";
 import NoTripItem from "../components/no-trip-item.js";
 import {cards} from "../mock/cards.js";
-import {SortType} from "../const.js";
+import {SortType, FilterType} from "../const.js";
 import {renderElement} from "../utils/render.js";
 import PointController, {Mode, EmptyEvent} from "./point-controller.js";
 
@@ -31,13 +31,15 @@ const renderEvents = (events, tripDay, onDataChange, onViewChange, isDefaultSort
 
 export default class TripController {
   constructor(container, eventsModel) {
-    this._container = container;
+    this._containerComponent = container;
+    this._container = this._containerComponent.getElement();
     this._eventsModel = eventsModel;
     this._showedEventControllers = [];
     this._sortComponent = new Sort();
     this._daysComponent = new Days();
     this._noTripItemComponent = new NoTripItem();
     this._eventItem = new EventItem();
+    this._sortType = SortType.EVENT;
     this._creatingEvent = null;
 
     this._onDataChange = this._onDataChange.bind(this);
@@ -47,6 +49,17 @@ export default class TripController {
 
     this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
     this._eventsModel.setFilterChangeHandler(this._onFilterChange);
+  }
+
+  hide() {
+    this._containerComponent.hide();
+    this._setDefaultBoardMode();
+  }
+
+  show() {
+    this._containerComponent.show();
+    this._sortComponent.rerender();
+    this.render();
   }
 
   render() {
@@ -71,6 +84,11 @@ export default class TripController {
     this._creatingEvent = new PointController(this._daysComponent.getElement(), this._onDataChange, this._onViewChange);
     this._creatingEvent.renderPoint(EmptyEvent, Mode.ADDING);
     this._onViewChange();
+  }
+
+  _setDefaultBoardMode() {
+    this._sortType = SortType.EVENT;
+    this._eventsModel.setFilter(FilterType.EVERYTHING);
   }
 
   _onSortTypeChange(sortType) {
@@ -116,6 +134,7 @@ export default class TripController {
 
   _onFilterChange() {
     this._updateEvents();
+    this._creatingEvent = null;
   }
 
   _onDataChange(pointController, oldData, newData) {
