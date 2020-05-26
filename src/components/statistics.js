@@ -41,13 +41,11 @@ export default class Statistics extends AbstractSmartComponent {
 
   show() {
     super.show();
-
     this._renderCharts();
   }
 
   hide() {
     super.hide();
-
     this._destroyCharts();
   }
 
@@ -91,9 +89,9 @@ export default class Statistics extends AbstractSmartComponent {
       plugins: [ChartDataLabels],
       type: `horizontalBar`,
       data: {
-        labels: this._tripEventsTypeLabels,
+        labels: this._tripEventsChartData.map((item) => item.label),
         datasets: [{
-          data: this._tripEventsTypes.map((eventType) => this._getMoneyValues(eventType)),
+          data: this._tripEventsChartData.map((item) => item.money).sort((a, b) => b - a),
           backgroundColor: `#ffffff`,
           hoverBackgroundColor: `#ffffff`,
           anchor: `start`
@@ -117,11 +115,6 @@ export default class Statistics extends AbstractSmartComponent {
           fontColor: `#000000`,
           fontSize: 23,
           position: `left`,
-        },
-        layout: {
-          padding: {
-            left: 100
-          }
         },
         scales: {
           yAxes: [{
@@ -159,15 +152,15 @@ export default class Statistics extends AbstractSmartComponent {
   }
 
   _renderTransportChart(transportCtx) {
-    transportCtx.height = BAR_HEIGHT * this._tripEventsTypes.length;
+    transportCtx.height = BAR_HEIGHT * Object.keys(this._transportEvents).length;
 
     return new Chart(transportCtx, {
       plugins: [ChartDataLabels],
       type: `horizontalBar`,
       data: {
-        labels: this._tripEventsTypeLabels,
+        labels: Object.keys(this._transportEvents).map((transportEvent) => ChartTypeLabelsMap[transportEvent]),
         datasets: [{
-          data: [4, 2, 1],
+          data: Object.values(this._transportEvents).sort((a, b) => b - a),
           backgroundColor: `#ffffff`,
           hoverBackgroundColor: `#ffffff`,
           anchor: `start`
@@ -191,11 +184,6 @@ export default class Statistics extends AbstractSmartComponent {
           fontColor: `#000000`,
           fontSize: 23,
           position: `left`,
-        },
-        layout: {
-          padding: {
-            left: 100
-          }
         },
         scales: {
           yAxes: [{
@@ -239,9 +227,9 @@ export default class Statistics extends AbstractSmartComponent {
       plugins: [ChartDataLabels],
       type: `horizontalBar`,
       data: {
-        labels: this._tripEventsTypeLabels,
+        labels: this._tripEventsChartData.map((item) => item.label),
         datasets: [{
-          data: [],
+          data: this._tripEventsChartData.map((item) => item.timeSpend).sort((a, b) => b - a),
           backgroundColor: `#ffffff`,
           hoverBackgroundColor: `#ffffff`,
           anchor: `start`
@@ -265,11 +253,6 @@ export default class Statistics extends AbstractSmartComponent {
           fontColor: `#000000`,
           fontSize: 23,
           position: `left`,
-        },
-        layout: {
-          padding: {
-            left: 100
-          }
         },
         scales: {
           yAxes: [{
@@ -320,7 +303,6 @@ export default class Statistics extends AbstractSmartComponent {
         timeSpend: this._getTimeSpend(event),
       };
     });
-
     return tripEventsChartData;
   }
 
@@ -332,7 +314,6 @@ export default class Statistics extends AbstractSmartComponent {
         tripEventChartData.push(event.type);
       }
     });
-
     return tripEventChartData;
   }
 
@@ -343,11 +324,8 @@ export default class Statistics extends AbstractSmartComponent {
 
   _getTimeSpend(tripEventType) {
     const allTripEventsTypes = this._filterTripEventTypes(tripEventType);
-    const totalDifference = allTripEventsTypes.reduce((totalTimeDifference, event) => {
-      return totalTimeDifference + (event.endDate - event.startDate);
-    }, 0);
+    const totalDifference = allTripEventsTypes.reduce((totalTimeDifference, event) => totalTimeDifference + (event.endDate - event.startDate), 0);
     let differenceInHours = Math.round(totalDifference / TimeInMs.HOUR);
-
     return differenceInHours;
   }
 
@@ -360,7 +338,6 @@ export default class Statistics extends AbstractSmartComponent {
         }
       });
     });
-
     return transportEvents;
   }
 
@@ -371,7 +348,6 @@ export default class Statistics extends AbstractSmartComponent {
       count[event] = (count[event] || 0) + 1;
       return count;
     }, {});
-
     return transportEventCounts;
   }
 }

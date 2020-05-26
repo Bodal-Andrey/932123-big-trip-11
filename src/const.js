@@ -34,4 +34,4 @@ export const TimeInMs = {
   MINUTE: 60000,
 };
 
-export const TRANSPORT_TYPE = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`];
+export const TRANSPORT_TYPE = [`taxi`, `bus`, `train`, `ship`, `transport`, `drive`, `flight`];
