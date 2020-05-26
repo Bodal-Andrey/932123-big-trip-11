@@ -133,8 +133,8 @@ export default class TripController {
   }
 
   _onFilterChange() {
-    this._sortComponent.rerender();
-    this.render();
+    this._updateEvents();
+    this._creatingEvent = null;
   }
 
   _onDataChange(pointController, oldData, newData) {
