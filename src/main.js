@@ -17,7 +17,6 @@ const SERVER_URL = `https://11.ecmascript.pages.academy/big-trip`;
 const siteTripMainElement = document.querySelector(`.trip-main`);
 const siteTripControlsElement = document.querySelector(`.trip-controls`);
 const pageBodyContainer = document.querySelector(`main .page-body__container`);
-const siteTripInfoElement = siteTripMainElement.querySelector(`.trip-info`);
 
 const menuComponent = new Menu();
 renderElement(siteTripControlsElement, menuComponent, `afterbegin`);
@@ -66,6 +65,7 @@ api.getEvents()
     remove(loading);
 
     renderElement(siteTripMainElement, trip, `afterbegin`);
+    const siteTripInfoElement = siteTripMainElement.querySelector(`.trip-info`);
     renderElement(siteTripInfoElement, cost, `beforeend`);
 
     tripController.render();
