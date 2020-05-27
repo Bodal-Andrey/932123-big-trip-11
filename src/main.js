@@ -11,6 +11,8 @@ import Statistics from "./components/statistics.js";
 import TripController from "./controllers/trip-controller.js";
 import {MenuItem} from "./const.js";
 
+const AUTHORIZATION = `Basic mJK256BmlfdmhHDNC`;
+
 // const siteTripMainElement = document.querySelector(`.trip-main`);
 const siteTripControlsElement = document.querySelector(`.trip-controls`);
 const pageBodyContainer = document.querySelector(`main .page-body__container`);
@@ -18,7 +20,7 @@ const pageBodyContainer = document.querySelector(`main .page-body__container`);
 const menuComponent = new Menu();
 renderElement(siteTripControlsElement, menuComponent, `afterbegin`);
 
-const api = new API();
+const api = new API(AUTHORIZATION);
 const eventsModel = new EventsModel();
 // eventsModel.setEvents(cards);
 
