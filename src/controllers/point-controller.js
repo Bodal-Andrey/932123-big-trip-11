@@ -1,5 +1,7 @@
 import EventEditItem from "../components/event-edit-item.js";
 import EventItem from "../components/event-item.js";
+import EventModel from "../models/event.js";
+import moment from "moment";
 import {renderElement, replace, remove} from "../utils/render.js";
 import {generateCard} from "../mock/cards.js";
 
@@ -24,6 +26,27 @@ export const EmptyEvent = {
   isNew: true,
 };
 
+const parseFormData = (formData, offers, photos, description, id) => {
+  return {
+    type: formData.get(`event-type`),
+    city: formData.get(`event-destination`),
+    startDate: moment(formData.get(`event-start-time`), `DD/MM/YY HH:mm`).valueOf(),
+    endDate: moment(formData.get(`event-end-time`), `DD/MM/YY HH:mm`).valueOf(),
+    offers: offers.map((offer) => {
+      return {
+        name: offer.name,
+        price: offer.price,
+        checked: formData.get(`event-offer-${offer.type}`) === `on` ? true : false
+      };
+    }),
+    photos,
+    description,
+    price: Number(formData.get(`event-price`)),
+    id,
+    isFavorite: formData.get(`event-favorite`) === `on`
+  };
+};
+
 export default class PointController {
   constructor(container, onDataChange, onViewChange) {
     this._container = container;
@@ -45,9 +68,13 @@ export default class PointController {
     this._eventEditItem = new EventEditItem(event);
 
     this._eventEditItem.setFavoriteHandler(() => {
-      this._onDataChange(this, event, Object.assign({}, event, {
-        isFavorite: !event.isFavorite,
-      }));
+      // this._onDataChange(this, event, Object.assign({}, event, {
+      //   isFavorite: !event.isFavorite,
+      // }));
+      const newEvent = EventModel.clone(event);
+      newEvent.isFavorite = !newEvent.isFavorite;
+
+      this._onDataChange(this, event, newEvent);
     });
 
     this._eventItem.setClickHandler(() => {
@@ -57,7 +84,8 @@ export default class PointController {
 
     this._eventEditItem.setSubmitHandler((evt) => {
       evt.preventDefault();
-      const data = this._eventEditItem.getData();
+      const formData = this._eventEditItem.getData();
+      const data = parseFormData(formData);
       this._onDataChange(this, event, data);
       document.removeEventListener(`keydown`, this._onEscKeyDown);
     });

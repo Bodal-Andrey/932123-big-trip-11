@@ -1,7 +1,5 @@
 import AbstractSmartComponent from "./abstract-smart-component.js";
 import flatpickr from "flatpickr";
-import moment from "moment";
-// import {encode} from "he";
 import "flatpickr/dist/flatpickr.min.css";
 
 const createAdditionalOfferMarkup = (offer, isChecked) => {
@@ -186,27 +184,6 @@ const createEventEditItemTemplate = (card, type) => {
   );
 };
 
-const parseFormData = (formData, offers, photos, description, id) => {
-  return {
-    type: formData.get(`event-type`),
-    city: formData.get(`event-destination`),
-    startDate: moment(formData.get(`event-start-time`), `DD/MM/YY HH:mm`).valueOf(),
-    endDate: moment(formData.get(`event-end-time`), `DD/MM/YY HH:mm`).valueOf(),
-    offers: offers.map((offer) => {
-      return {
-        name: offer.name,
-        price: offer.price,
-        checked: formData.get(`event-offer-${offer.type}`) === `on` ? true : false
-      };
-    }),
-    photos,
-    description,
-    price: Number(formData.get(`event-price`)),
-    id,
-    isFavorite: formData.get(`event-favorite`) === `on`
-  };
-};
-
 export default class EventEditItem extends AbstractSmartComponent {
   constructor(card) {
     super();
@@ -292,14 +269,7 @@ export default class EventEditItem extends AbstractSmartComponent {
 
   getData() {
     const form = this.getElement().querySelector(`.event--edit`);
-    const formData = new FormData(form);
-    return parseFormData(
-        formData,
-        this._card.offers,
-        this._card.photos,
-        this._card.description,
-        this._card.id
-    );
+    return new FormData(form);
   }
 
   setFavoriteHandler(handler) {
