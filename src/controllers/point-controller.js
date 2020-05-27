@@ -26,25 +26,25 @@ export const EmptyEvent = {
   isNew: true,
 };
 
-const parseFormData = (formData, offers, photos, description, id) => {
-  return {
-    type: formData.get(`event-type`),
-    city: formData.get(`event-destination`),
-    startDate: moment(formData.get(`event-start-time`), `DD/MM/YY HH:mm`).valueOf(),
-    endDate: moment(formData.get(`event-end-time`), `DD/MM/YY HH:mm`).valueOf(),
-    offers: offers.map((offer) => {
+const parseFormData = (formData) => {
+  return new EventModel({
+    "type": formData.get(`event-type`),
+    "city": formData.get(`event-destination`),
+    "startDate": moment(formData.get(`event-start-time`), `DD/MM/YY HH:mm`).valueOf(),
+    "endDate": moment(formData.get(`event-end-time`), `DD/MM/YY HH:mm`).valueOf(),
+    "offers": formData.get(`event-offers`).map((offer) => {
       return {
         name: offer.name,
         price: offer.price,
         checked: formData.get(`event-offer-${offer.type}`) === `on` ? true : false
       };
     }),
-    photos,
-    description,
-    price: Number(formData.get(`event-price`)),
-    id,
-    isFavorite: formData.get(`event-favorite`) === `on`
-  };
+    "photos": formData.get(`event-photos`),
+    "description": formData.get(`event-description`),
+    "price": Number(formData.get(`event-price`)),
+    "id": formData.get(`event-id`),
+    "isFavorite": formData.get(`event-favorite`) === `on`
+  });
 };
 
 export default class PointController {
