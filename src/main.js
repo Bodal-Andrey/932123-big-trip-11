@@ -1,39 +1,40 @@
-import Trip from "./components/trip.js";
-import Cost from "./components/cost.js";
+import API from "./api.js";
+// import Trip from "./components/trip.js";
+// import Cost from "./components/cost.js";
 import Menu from "./components/menu.js";
 import FilterController from "./controllers/filter-controller.js";
 import EventsModel from "./models/events.js";
 import EventsBoard from "./components/events-board.js";
-import {cards} from "./mock/cards.js";
+// import {cards} from "./mock/cards.js";
 import {renderElement} from "./utils/render.js";
 import Statistics from "./components/statistics.js";
 import TripController from "./controllers/trip-controller.js";
 import {MenuItem} from "./const.js";
 
-const siteTripMainElement = document.querySelector(`.trip-main`);
+// const siteTripMainElement = document.querySelector(`.trip-main`);
 const siteTripControlsElement = document.querySelector(`.trip-controls`);
 const pageBodyContainer = document.querySelector(`main .page-body__container`);
 
 const menuComponent = new Menu();
 renderElement(siteTripControlsElement, menuComponent, `afterbegin`);
 
+const api = new API();
 const eventsModel = new EventsModel();
-eventsModel.setEvents(cards);
+// eventsModel.setEvents(cards);
 
 const filterController = new FilterController(siteTripControlsElement, eventsModel);
 filterController.render();
 
-renderElement(siteTripMainElement, new Trip(cards), `afterbegin`);
+// renderElement(siteTripMainElement, new Trip(cards), `afterbegin`);
 
-const siteTripInfoElement = siteTripMainElement.querySelector(`.trip-info`);
+// const siteTripInfoElement = siteTripMainElement.querySelector(`.trip-info`);
 
-renderElement(siteTripInfoElement, new Cost(cards), `beforeend`);
+// renderElement(siteTripInfoElement, new Cost(cards), `beforeend`);
 
 const eventsBoard = new EventsBoard();
 renderElement(pageBodyContainer, eventsBoard, `afterbegin`);
 
 const tripController = new TripController(eventsBoard, eventsModel);
-tripController.render();
 
 document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, () => {
   tripController.createEvent();
@@ -56,3 +57,9 @@ menuComponent.setOnChange((menuItem) => {
       tripController.show();
   }
 });
+
+api.getEvents()
+  .then((events) => {
+    eventsModel.setEvents(events);
+    tripController.render();
+  });
