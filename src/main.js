@@ -39,7 +39,7 @@ filterController.render();
 const eventsBoard = new EventsBoard();
 renderElement(pageBodyContainer, eventsBoard, `afterbegin`);
 
-const tripController = new TripController(eventsBoard, eventsModel);
+const tripController = new TripController(eventsBoard, eventsModel, api);
 
 document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, () => {
   tripController.createEvent();

@@ -30,10 +30,11 @@ const renderEvents = (events, tripDay, onDataChange, onViewChange, isDefaultSort
 };
 
 export default class TripController {
-  constructor(container, eventsModel) {
+  constructor(container, eventsModel, api) {
     this._containerComponent = container;
     this._container = this._containerComponent.getElement();
     this._eventsModel = eventsModel;
+    this._api = api;
     this._showedEventControllers = [];
     this._sortComponent = new Sort();
     this._daysComponent = new Days();
@@ -152,11 +153,14 @@ export default class TripController {
       this._eventsModel.removeEvent(oldData.id);
       this._updateEvents();
     } else {
-      const isSuccess = this._eventsModel.updateEvent(oldData.id, newData);
+      this._api._updateEvent(oldData.id, newData)
+      .then((eventModel) => {
+        const isSuccess = this._eventsModel.updateEvent(oldData.id, eventModel);
 
-      if (isSuccess) {
-        pointController.renderPoint(newData, Mode.DEFAULT);
-      }
+        if (isSuccess) {
+          pointController.renderPoint(newData, Mode.DEFAULT);
+        }
+      });
     }
   }
 }
