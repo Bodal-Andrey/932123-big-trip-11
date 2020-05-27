@@ -1,4 +1,4 @@
-import AbstractComponent from "./abstract-component.js";
+import AbstractSmartComponent from "./abstract-smart-component.js";
 
 const createTripTemplate = (cards) => {
   if (cards.length > 0) {
@@ -33,13 +33,14 @@ const createTripTemplate = (cards) => {
   }
 };
 
-export default class Trip extends AbstractComponent {
-  constructor(cards) {
+export default class Trip extends AbstractSmartComponent {
+  constructor(eventsModel) {
     super();
-    this._cards = cards;
+    this._eventsModel = eventsModel;
+    this._events = this._eventsModel.getEvents();
   }
 
   getTemplate() {
-    return createTripTemplate(this._cards);
+    return createTripTemplate(this._events);
   }
 }

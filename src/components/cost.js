@@ -1,4 +1,4 @@
-import AbstractComponent from "./abstract-component.js";
+import AbstractSmartComponent from "./abstract-smart-component.js";
 
 const createCostTemplate = (card) => {
   if (card.length > 0) {
@@ -23,13 +23,14 @@ const createCostTemplate = (card) => {
 
 };
 
-export default class Cost extends AbstractComponent {
-  constructor(card) {
+export default class Cost extends AbstractSmartComponent {
+  constructor(eventsModel) {
     super();
-    this._card = card;
+    this._eventsModel = eventsModel;
+    this._events = this._eventsModel.getEvents();
   }
 
   getTemplate() {
-    return createCostTemplate(this._card);
+    return createCostTemplate(this._events);
   }
 }
