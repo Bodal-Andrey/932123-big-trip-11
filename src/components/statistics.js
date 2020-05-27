@@ -1,5 +1,5 @@
 import AbstractSmartComponent from "./abstract-smart-component.js";
-import {ChartTypeLabelsMap, TRANSPORT_TYPE, TimeInMs} from "../const.js";
+import {ChartTypeLabelsMap, TRANSPORT_TYPES, TimeInMs} from "../const.js";
 import Chart from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 
@@ -331,7 +331,7 @@ export default class Statistics extends AbstractSmartComponent {
 
   _getTransportEvents() {
     const transportEvents = [];
-    TRANSPORT_TYPE.forEach((type) => {
+    TRANSPORT_TYPES.forEach((type) => {
       this._events.forEach((event) => {
         if (event.type === type) {
           transportEvents.push(event.type);

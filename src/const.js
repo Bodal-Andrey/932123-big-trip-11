@@ -15,6 +15,19 @@ export const MenuItem = {
   STATS: `control__stats`,
 };
 
+export const eventActions = {
+  'taxi': `to`,
+  'bus': `to`,
+  'train': `to`,
+  'ship': `to`,
+  'transport': `to`,
+  'drive': `to`,
+  'flight': `to`,
+  'check-in': `in`,
+  'sightseeing': `in`,
+  'restaurant': `in`,
+};
+
 export const ChartTypeLabelsMap = {
   'taxi': `🚕 TAXI`,
   'bus': `🚌 BUS`,
@@ -34,4 +47,6 @@ export const TimeInMs = {
   MINUTE: 60000,
 };
 
-export const TRANSPORT_TYPE = [`taxi`, `bus`, `train`, `ship`, `transport`, `drive`, `flight`];
+export const TRANSPORT_TYPES = [`taxi`, `bus`, `train`, `ship`, `transport`, `drive`, `flight`];
+
+export const EVENT_TYPES = [`taxi`, `bus`, `train`, `ship`, `transport`, `drive`, `flight`, `check-in`, `sightseeing`, `restaurant`];
