@@ -11,7 +11,6 @@ export default class Event {
     this.offers = data[`offers`];
     this.photos = data[`photos`];
     this.isFavorite = Boolean(data[`is_favorite`]);
-    this.isNew = false;
   }
 
   static parseEvent(data) {

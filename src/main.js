@@ -5,8 +5,9 @@ import Menu from "./components/menu.js";
 import FilterController from "./controllers/filter-controller.js";
 import EventsModel from "./models/events.js";
 import EventsBoard from "./components/events-board.js";
+import Loading from "./components/loading.js";
 // import {cards} from "./mock/cards.js";
-import {renderElement} from "./utils/render.js";
+import {renderElement, remove} from "./utils/render.js";
 import Statistics from "./components/statistics.js";
 import TripController from "./controllers/trip-controller.js";
 import {MenuItem} from "./const.js";
@@ -23,6 +24,8 @@ renderElement(siteTripControlsElement, menuComponent, `afterbegin`);
 const api = new API(AUTHORIZATION);
 const eventsModel = new EventsModel();
 // eventsModel.setEvents(cards);
+
+const loading = new Loading();
 
 const filterController = new FilterController(siteTripControlsElement, eventsModel);
 filterController.render();
@@ -63,5 +66,6 @@ menuComponent.setOnChange((menuItem) => {
 api.getEvents()
   .then((events) => {
     eventsModel.setEvents(events);
+    remove(loading);
     tripController.render();
   });
