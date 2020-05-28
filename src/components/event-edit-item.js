@@ -185,10 +185,12 @@ const createEventEditItemTemplate = (card, type) => {
 };
 
 export default class EventEditItem extends AbstractSmartComponent {
-  constructor(card) {
+  constructor(event, offers, destinations) {
     super();
-    this._card = card;
-    this._type = card.type;
+    this._event = event;
+    this._eventType = this._event.type;
+    this._offers = offers;
+    this._destinations = destinations;
     this._submitHandler = null;
     this._displaceHandler = null;
     this._deleteHandler = null;
@@ -203,7 +205,7 @@ export default class EventEditItem extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    return createEventEditItemTemplate(this._card, this._type, this._offers);
+    return createEventEditItemTemplate(this._event, this._eventType, this._offers);
   }
 
   removeElement() {

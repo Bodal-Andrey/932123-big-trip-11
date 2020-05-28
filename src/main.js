@@ -25,6 +25,7 @@ const api = new API(SERVER_URL, AUTHORIZATION);
 const eventsModel = new EventsModel();
 
 const loading = new Loading();
+renderElement(pageBodyContainer, loading);
 
 const filterController = new FilterController(siteTripControlsElement, eventsModel);
 filterController.render();

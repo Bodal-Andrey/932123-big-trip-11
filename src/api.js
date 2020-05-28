@@ -1,11 +1,5 @@
 import Event from "./models/event.js";
-
-const Method = {
-  GET: `GET`,
-  POST: `POST`,
-  PUT: `PUT`,
-  DELETE: `DELETE`
-};
+import {ServerUrl} from "./const.js";
 
 const checkStatus = (response) => {
   if (response.status >= 200 && response.status < 300) {
@@ -16,32 +10,67 @@ const checkStatus = (response) => {
 };
 
 const API = class {
-  constructor(serverUrl, authorization) {
-    this._serverUrl = serverUrl;
+  constructor(authorization) {
     this._authorization = authorization;
   }
 
+  getData() {
+    return Promise.all([
+      this.getTripEvents(),
+      this.getOffers(),
+      this.getDestinations(),
+    ])
+      .then((response) => {
+        const [tripEvents, offers, destinations] = response;
+        return {
+          tripEvents,
+          offers,
+          destinations,
+        };
+      });
+  }
+
   getEvents() {
-    return this._load({url: `points`})
+    return this._load({
+      url: ServerUrl.POINTS,
+      method: `GET`,
+    })
       .then((response) => response.json())
       .then(Event.parseEvents);
   }
 
-  updateEvent(id, data) {
+  // updateEvent(id, data) {
+  //   return this._load({
+  //     url: `points/${id}`,
+  //     method: Method.PUT,
+  //     body: JSON.stringify(data.toRAW()),
+  //     headers: new Headers({"Content-Type": `application/json`})
+  //   })
+  //     .then((response) => response.json())
+  //     .then(Event.parseEvent);
+  // }
+
+  getOffers() {
     return this._load({
-      url: `points/${id}`,
-      method: Method.PUT,
-      body: JSON.stringify(data.toRAW()),
-      headers: new Headers({"Content-Type": `application/json`})
+      url: ServerUrl.OFFERS,
+      method: `GET`,
     })
-      .then((response) => response.json())
-      .then(Event.parseEvent);
+      .then((response) => response.json());
   }
 
-  _load({url, method = Method.GET, body = null, headers = new Headers()}) {
+  getDestinations() {
+    return this._load({
+      url: ServerUrl.DESTINATIONS,
+      method: `GET`,
+    })
+      .then((response) => response.json());
+  }
+
+
+  _load({url, method, headers = new Headers()}) {
     headers.append(`Authorization`, this._authorization);
 
-    return fetch(`${this._serverUrl}/${url}`, {method, body, headers})
+    return fetch(url, {method, headers})
       .then(checkStatus)
       .catch((err) => {
         throw err;
