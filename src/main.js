@@ -17,32 +17,26 @@ const SERVER_URL = `https://11.ecmascript.pages.academy/big-trip`;
 const siteTripMainElement = document.querySelector(`.trip-main`);
 const siteTripControlsElement = document.querySelector(`.trip-controls`);
 const pageBodyContainer = document.querySelector(`main .page-body__container`);
-
 const menuComponent = new Menu();
-renderElement(siteTripControlsElement, menuComponent, `afterbegin`);
-
 const api = new API(SERVER_URL, AUTHORIZATION);
 const eventsModel = new EventsModel();
-
 const loading = new Loading();
-renderElement(pageBodyContainer, loading);
-
 const filterController = new FilterController(siteTripControlsElement, eventsModel);
-filterController.render();
-
 const trip = new Trip(eventsModel);
 const cost = new Cost(eventsModel);
-
 const eventsBoard = new EventsBoard();
-renderElement(pageBodyContainer, eventsBoard, `afterbegin`);
-
 const tripController = new TripController(eventsBoard, eventsModel, api);
+const statisticsComponent = new Statistics(eventsModel);
+
+renderElement(siteTripControlsElement, menuComponent, `afterbegin`);
+renderElement(pageBodyContainer, loading);
+filterController.render();
+renderElement(pageBodyContainer, eventsBoard, `afterbegin`);
 
 document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, () => {
   tripController.createEvent();
 });
 
-const statisticsComponent = new Statistics(eventsModel);
 renderElement(pageBodyContainer, statisticsComponent, `beforeend`);
 statisticsComponent.hide();
 
@@ -60,7 +54,7 @@ menuComponent.setOnChange((menuItem) => {
   }
 });
 
-api.getEvents()
+api.getData()
   .then((events) => {
     eventsModel.setEvents(events);
     remove(loading);

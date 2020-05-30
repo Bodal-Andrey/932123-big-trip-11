@@ -68,9 +68,6 @@ export default class PointController {
     this._eventEditItem = new EventEditItem(event);
 
     this._eventEditItem.setFavoriteHandler(() => {
-      // this._onDataChange(this, event, Object.assign({}, event, {
-      //   isFavorite: !event.isFavorite,
-      // }));
       const newEvent = EventModel.clone(event);
       newEvent.isFavorite = !newEvent.isFavorite;
 

@@ -145,15 +145,30 @@ export default class TripController {
         pointController.destroy();
         this._updateEvents();
       } else {
-        this._eventsModel.addEvent(newData);
-        this._removeEvents();
-        this._showedEventControllers = renderEvents(this._eventsModel.getEvents(), this._daysComponent, this._onDataChange, this._onViewChange);
+        this._api.createPoint(newData)
+        .then((eventModel) => {
+          this._eventsModel.addEvent(eventModel);
+
+          this._showedEventControllers = [pointController, ...this._showedEventControllers];
+
+          this._removeEvents();
+          this._showedEventControllers = renderEvents(this._eventsModel.getEvents(), this._daysComponent, this._onDataChange, this._onViewChange);
+        })
+        .catch(() => {
+          pointController.shake();
+        });
       }
     } else if (newData === null) {
-      this._eventsModel.removeEvent(oldData.id);
-      this._updateEvents();
+      this._api.deletePoint(oldData.id)
+      .then(() => {
+        this._eventsModel._removeEvent(oldData.id);
+        this._updateEvents();
+      })
+      .catch(() => {
+        pointController.shake();
+      });
     } else {
-      this._api._updateEvent(oldData.id, newData)
+      this._api._updatePoint(oldData.id, newData)
       .then((eventModel) => {
         const isSuccess = this._eventsModel.updateEvent(oldData.id, eventModel);
 
