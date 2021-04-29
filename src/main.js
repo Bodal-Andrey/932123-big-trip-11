@@ -12,7 +12,7 @@ import TripController from "./controllers/trip-controller.js";
 import {MenuItem} from "./const.js";
 
 const AUTHORIZATION = `Basic mJK256BmlfdmhHDNC`;
-const SERVER_URL = `https://11.ecmascript.pages.academy/big-trip`;
+const SERVER_URL = `https://13.ecmascript.pages.academy/big-trip`;
 
 const siteTripMainElement = document.querySelector(`.trip-main`);
 const siteTripControlsElement = document.querySelector(`.trip-controls`);

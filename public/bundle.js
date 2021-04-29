@@ -28593,7 +28593,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const AUTHORIZATION = `Basic mJK256BmlfdmhHDNC`;
-const SERVER_URL = `https://11.ecmascript.pages.academy/big-trip`;
+const SERVER_URL = `https://13.ecmascript.pages.academy/big-trip`;
 
 const siteTripMainElement = document.querySelector(`.trip-main`);
 const siteTripControlsElement = document.querySelector(`.trip-controls`);
